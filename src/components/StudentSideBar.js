@@ -40,7 +40,7 @@ const StudentSideBar = ({setSelectedSection}) => {
 
         <div className="flex flex-col items-center">
           <ul className="pt-5 lg:pl-10 w-full">
-            <Link to="/studentdashboard/home">
+            <Link to="home">
               <li
                 onClick={() => handleSectionChange("home")}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"

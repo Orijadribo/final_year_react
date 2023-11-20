@@ -10,6 +10,7 @@ import History from "../components/History";
 import Notifications from "../components/Notifications";
 import Settings from "../components/Settings";
 import LoginForm from "./LoginForm";
+import OptionsBar from "../components/OptionsBar";
 
 const Layout = () => {
   const [selectedSection, setSelectedSection] = useState("home");
@@ -17,7 +18,6 @@ const Layout = () => {
   return (
     <div>
       <StudentSideBar setSelectedSection={setSelectedSection} />
-      <StudentsOptionsBar />
       <MainContent
         selectedSection={selectedSection}
         setSelectedSection={setSelectedSection}
@@ -31,12 +31,13 @@ const StudentDashboard = () => {
   return (
     <div className="font-titleFont">
       <Routes>
-        <Route path="/" element={<Layout />} />
-        <Route path="home" element={<Home />} />
-        <Route path="upload" element={<Upload />} />
-        <Route path="history" element={<History />} />
-        <Route path="notifications" element={<Notifications />} />
-        <Route path="settings" element={<Settings />} />
+        <Route path="/" element={<Layout />}>
+          <Route index path="home" />
+          <Route path="upload" />
+          <Route path="history" />
+          <Route path="notifications" />
+          <Route path="settings" />
+        </Route>
         <Route path="login" element={<LoginForm />} />
       </Routes>
     </div>
