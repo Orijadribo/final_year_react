@@ -97,7 +97,7 @@ const SignUpPage = () => {
         <div className="text-sm mt-5">
           Already have an account?<span> </span>
           <span className="text-[#02B056] underline">
-            <a href="/login"> Login</a>
+            <a href="/"> Login</a>
           </span>
         </div>
       </div>

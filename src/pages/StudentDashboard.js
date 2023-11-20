@@ -1,13 +1,9 @@
-import React, {useState} from "react";
+// StudentDashboard.js
+import React, { useState } from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
 import StudentSideBar from "../components/StudentSideBar";
 import StudentsOptionsBar from "../components/StudentsOptionsBar";
 import MainContent from "../components/MainContent";
-import {
-  createBrowserRouter,
-  Outlet,
-  RouterProvider,
-  ScrollRestoration,
-} from "react-router-dom";
 import Home from "../components/Home";
 import Upload from "../components/Upload";
 import History from "../components/History";
@@ -16,39 +12,33 @@ import Settings from "../components/Settings";
 import LoginForm from "./LoginForm";
 
 const Layout = () => {
-    const [selectedSection, setSelectedSection] = useState("home");
+  const [selectedSection, setSelectedSection] = useState("home");
 
   return (
     <div>
       <StudentSideBar setSelectedSection={setSelectedSection} />
-      <ScrollRestoration />
       <StudentsOptionsBar />
-      <ScrollRestoration />
-      <MainContent selectedSection={selectedSection} setSelectedSection={setSelectedSection} />
-      <ScrollRestoration />
+      <MainContent
+        selectedSection={selectedSection}
+        setSelectedSection={setSelectedSection}
+      />
+      <Outlet /> {/* This is where child routes will be rendered */}
     </div>
   );
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
-    children: [
-      { path: "/stdentdashboard/home", element: <Home /> },
-      { path: "/stdentdashboard/upload", element: <Upload /> },
-      { path: "/stdentdashboard/history", element: <History /> },
-      { path: "/stdentdashboard/notifications", element: <Notifications /> },
-      { path: "/stdentdashboard/settings", element: <Settings /> },
-      { path: "/stdentdashboard/login", element: <LoginForm /> },
-    ],
-  },
-]);
-
 const StudentDashboard = () => {
   return (
     <div className="font-titleFont">
-      <RouterProvider router={router} />
+      <Routes>
+        <Route path="/" element={<Layout />} />
+        <Route path="home" element={<Home />} />
+        <Route path="upload" element={<Upload />} />
+        <Route path="history" element={<History />} />
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="login" element={<LoginForm />} />
+      </Routes>
     </div>
   );
 };

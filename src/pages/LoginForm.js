@@ -1,7 +1,17 @@
 import React from "react";
 import { kiu_logo_2 } from "../assets";
+import { useNavigate } from "react-router-dom";
+
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    // Perform your login logic here
+
+    // After successful login, navigate to studentdashboard/home
+    navigate("/dashboard/");
+  };
   return (
     <div className="flex items-center justify-center max-w-screen-2xl m-auto h-screen bg-[#F4F6F9]">
       {/* Login form container */}
@@ -64,6 +74,7 @@ const LoginForm = () => {
           className="w-full rounded-lg py-2 bg-[#02B056]"
           type="button"
           id="loginButton"
+          onClick={handleLogin}
         >
           Login
         </button>
