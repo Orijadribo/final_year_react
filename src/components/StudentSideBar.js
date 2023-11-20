@@ -40,7 +40,7 @@ const StudentSideBar = ({setSelectedSection}) => {
 
         <div className="flex flex-col items-center">
           <ul className="pt-5 lg:pl-10 w-full">
-            <Link to="/">
+            <Link to="/stdentdashboard/home">
               <li
                 onClick={() => handleSectionChange("home")}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
@@ -53,7 +53,7 @@ const StudentSideBar = ({setSelectedSection}) => {
                 </div>
               </li>
             </Link>
-            <Link to="/upload">
+            <Link to="/stdentdashboard/upload">
               <li
                 onClick={openUpload}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
@@ -66,7 +66,7 @@ const StudentSideBar = ({setSelectedSection}) => {
                 </div>
               </li>
             </Link>
-            <Link to="/history">
+            <Link to="/stdentdashboard/history">
               <li
                 onClick={openHistory}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
@@ -79,7 +79,7 @@ const StudentSideBar = ({setSelectedSection}) => {
                 </div>
               </li>
             </Link>
-            <Link to="/notifications">
+            <Link to="/stdentdashboard/notifications">
               <li
                 onClick={openNotifications}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
@@ -92,7 +92,7 @@ const StudentSideBar = ({setSelectedSection}) => {
                 </div>
               </li>
             </Link>
-            <Link to="/settings">
+            <Link to="/stdentdashboard/settings">
               <li
                 onClick={openSettings}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"

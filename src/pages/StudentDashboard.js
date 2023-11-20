@@ -35,12 +35,12 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/upload", element: <Upload /> },
-      { path: "/history", element: <History /> },
-      { path: "/notifications", element: <Notifications /> },
-      { path: "/settings", element: <Settings /> },
-      { path: "/login", element: <LoginForm /> },
+      { path: "/stdentdashboard/home", element: <Home /> },
+      { path: "/stdentdashboard/upload", element: <Upload /> },
+      { path: "/stdentdashboard/history", element: <History /> },
+      { path: "/stdentdashboard/notifications", element: <Notifications /> },
+      { path: "/stdentdashboard/settings", element: <Settings /> },
+      { path: "/stdentdashboard/login", element: <LoginForm /> },
     ],
   },
 ]);
