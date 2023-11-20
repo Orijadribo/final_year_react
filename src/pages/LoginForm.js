@@ -68,7 +68,7 @@ const LoginForm = () => {
           Login
         </button>
         <div className="text-sm mt-5">
-          Don't have an account?
+          Don't have an account?<span> </span>
           <span className="text-[#02B056] underline">
             <a href="/registration"> Register</a>
           </span>

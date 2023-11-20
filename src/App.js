@@ -6,9 +6,9 @@ import SignUpPage from "./pages/SignUpPage";
 function App() {
   return (
     <div className="font-bodyFont">
-      {/* <LoginForm /> */}
+      <LoginForm />
       {/* <SignUpPage /> */}
-      <StudentDashboard />
+      {/* <StudentDashboard /> */}
     </div>
   );
 }

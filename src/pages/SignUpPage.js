@@ -75,7 +75,7 @@ const SignUpPage = () => {
               //   value="terms"
             />
             <label className="pl-2 text-sm" htmlFor="terms">
-              I have read and agree to
+              I have read and agree to <span> </span>
               <span className="text-[#02B056]">
                 <a href="/login" className=" underline">
                   {" "}
@@ -95,7 +95,7 @@ const SignUpPage = () => {
           Register Now
         </button>
         <div className="text-sm mt-5">
-          Already have an account?
+          Already have an account?<span> </span>
           <span className="text-[#02B056] underline">
             <a href="/login"> Login</a>
           </span>
