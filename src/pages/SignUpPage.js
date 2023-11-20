@@ -1,23 +1,23 @@
 import React from "react";
 import { kiu_logo_2 } from "../assets";
 
-const LoginForm = () => {
+const SignUpPage = () => {
   return (
-    <div className="flex items-center justify-center max-w-screen-2xl m-auto h-screen bg-[#F4F6F9]">
+    <div className="flex items-center justify-center max-w-screen-2xl m-auto  bg-[#F4F6F9]">
       {/* Login form container */}
       <div className="flex flex-col items-center justify-center rounded-lg w-[600px] bg-[#FFFFFF] p-14 shadow-xl">
         {/* Logo and title section */}
         <div className="flex flex-col items-center justify-center w-1/2">
           <img src={kiu_logo_2} alt="KIU Logo" />
           <h1 className="py-5 font-medium font-titleFont text-center text-xl">
-            Bank Slip Verification Login
+            Bank Slip Verification Student SignUp
           </h1>
         </div>
 
-        {/* Login form */}
+        {/* SignUp form */}
         <form className="flex flex-col w-full" action="">
           <label className="pb-2" htmlFor="email">
-            Email
+            Student Email
           </label>
           <input
             className="border rounded-lg p-2 mb-5"
@@ -39,22 +39,49 @@ const LoginForm = () => {
             id="password"
             type="password"
           />
+          <label className="pb-2" htmlFor="first_name">
+            First Name
+          </label>
+          <input
+            className="border rounded-lg p-2 mb-5"
+            id="first_name"
+            type="text"
+          />
+          <label className="pb-2" htmlFor="last_name">
+            Last Name
+          </label>
+          <input
+            className="border rounded-lg p-2 mb-5"
+            id="last_name"
+            type="text"
+          />
+          <label className="pb-2" htmlFor="reg_no">
+            Registration Number
+          </label>
+          <input
+            className="border rounded-lg p-2 mb-5"
+            id="reg_no"
+            type="text"
+          />
         </form>
 
-        {/* Remember me checkbox and forgot password link */}
-        <div className="flex items-center justify-between w-full pb-5">
-          <a className="text-sm underline" href="">
-            Forgot your password?
-          </a>
+        {/* Terms and conditions */}
+        <div className="flex items-center justify-center w-full pb-5">
           <div className="flex items-center justify-center">
             <input
               type="checkbox"
-              id="remember"
-              name="remember"
-              value="Remember me"
+              id="terms"
+              name="terms"
+              //   value="terms"
             />
-            <label className="pl-2 text-sm" htmlFor="remember">
-              Remember me?
+            <label className="pl-2 text-sm" htmlFor="terms">
+              I have read and agree to
+              <span className="text-[#02B056]">
+                <a href="/login" className=" underline">
+                  {" "}
+                  Terms and Conditions
+                </a>
+              </span>
             </label>
           </div>
         </div>
@@ -65,12 +92,12 @@ const LoginForm = () => {
           type="button"
           id="loginButton"
         >
-          Login
+          Register Now
         </button>
         <div className="text-sm mt-5">
-          Don't have an account?
+          Already have an account?
           <span className="text-[#02B056] underline">
-            <a href="/registration"> Register</a>
+            <a href="/login"> Login</a>
           </span>
         </div>
       </div>
@@ -78,4 +105,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignUpPage;
