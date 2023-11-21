@@ -5,6 +5,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { profile_pic } from "../assets";
 import { Link } from "react-router-dom";
+import { VscFeedback } from "react-icons/vsc";
 
 const OptionsBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,10 @@ const OptionsBar = () => {
           </div>
           <div className="flex flex-row items-center justify-center gap-4">
             <div className="px-5">
-              <div className="flex flex-row items-center relative justify-center px-1">
+              <div className="flex flex-row items-center relative justify-center px-1 gap-5">
+                <div>
+                <VscFeedback />
+                </div>
                 <div className="cursor-pointer">
                   <FaBell />
                 </div>

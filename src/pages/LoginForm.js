@@ -13,7 +13,7 @@ const LoginForm = () => {
     navigate("/dashboard/");
   };
   return (
-    <div className="flex items-center justify-center max-w-screen-2xl m-auto h-screen bg-[#F4F6F9]">
+    <div className="flex items-center justify-center w-screen m-auto h-screen bg-[#F4F6F9]">
       {/* Login form container */}
       <div className="flex flex-col items-center justify-center rounded-lg w-[600px] bg-[#FFFFFF] p-14 shadow-xl">
         {/* Logo and title section */}
