@@ -3,7 +3,7 @@ import { kiu_logo_2 } from "../assets";
 
 const SignUpPage = () => {
   return (
-    <div className="flex items-center justify-center max-w-screen-2xl m-auto  bg-[#F4F6F9]">
+    <div className="flex items-center justify-center h-screen max-w-screen-2xl m-auto  bg-[#F4F6F9]">
       {/* Login form container */}
       <div className="flex flex-col items-center justify-center rounded-lg w-[600px] bg-[#FFFFFF] p-14 shadow-xl">
         {/* Logo and title section */}
