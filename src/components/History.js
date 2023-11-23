@@ -133,7 +133,11 @@ const History = () => {
           <div className={`${verifiedList ? "" : "hidden"}`}>
             <ul className="py-5 w-full">
               {verifiedItems.map((item) => (
-                <li key={item.id} className="flex flex-col justify-center pt-5">
+                <li
+                  key={item.id}
+                  className="flex flex-col justify-center pt-5 w-full bg-white rounded-2xl shadow-lg px-5"
+                >
+                  <div className="font-bold text-lg">{item.id}</div>
                   <div className="flex items-center justify-between py-1">
                     <p>Amount: </p>
                     <p>{item.amount}</p>
@@ -160,8 +164,9 @@ const History = () => {
               {deniedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center pt-5 w-full"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg"
                 >
+                  <div className="font-bold text-lg">{item.id}</div>
                   <div className="flex items-center justify-between py-1">
                     <p>Amount: </p>
                     <p>{item.amount}</p>
@@ -174,11 +179,11 @@ const History = () => {
                     <p>Payer: </p>
                     <p>{item.payer}</p>
                   </div>
-                  <div className="flex items-center justify-between py-1">
+                  <div className="flex items-center justify-between pt-1">
                     <p>Registration No: </p>
                     <p>{item.regNo}</p>
                   </div>
-                  <hr className="w-full mt-5"></hr>
+                  {/* <hr className="w-full mt-5"></hr> */}
                 </li>
               ))}
             </ul>

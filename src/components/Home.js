@@ -9,22 +9,46 @@ const Home = () => {
     const db = getDatabase();
     const collectionRef = ref(db, verifiedList);
 
-    onValue(
-      collectionRef,
-      (snapshot) => {
+   onValue(
+     collectionRef,
+     (snapshot) => {
+       if (snapshot.exists()) {
+         // Initialize an object to store counts for each "Ocan David" entry
+         const counts = {};
 
-        // Use Object.keys().length to get the count of items
-        const count = snapshot.exists()
-          ? Object.keys(snapshot.val()).length
-          : 0;
+         // Loop through each entry in the snapshot
+         Object.entries(snapshot.val()).forEach(([key, item]) => {
+           // Initialize count for this entry if not already done
 
-        setCount(count);
-      },
-      (error) => {
-        console.error("Error fetching collection count:", error);
-        setCount(-1); // Handle the error appropriately
-      }
-    );
+           var index = 0;
+           for (const key in item) {
+             if (item.hasOwnProperty(key)) {
+               const value = item[key];
+               // Check if the payer is "Ocan David"
+               if (value.payer === "Ocan David") {
+                 // Increment the count for each entry
+                 index++;
+               } else {
+                 console.log("User not found");
+               }
+             }
+           }
+           setverifiedItemsCount(index);
+
+           counts[key]++;
+
+           // console.log(key);
+         });
+       } else {
+         console.log("No data found for the collection");
+         // Handle the case where no data is found
+       }
+     },
+     (error) => {
+       console.error("Error fetching collection data:", error);
+       // Handle the error appropriately
+     }
+   );
   };
 
   const getdeniedItemsCount = (deniedList, setCount) => {
@@ -34,17 +58,41 @@ const Home = () => {
     onValue(
       collectionRef,
       (snapshot) => {
+        if (snapshot.exists()) {
+          // Initialize an object to store counts for each "Ocan David" entry
+          const counts = {};
 
-        // Use Object.keys().length to get the count of items
-        const count = snapshot.exists()
-          ? Object.keys(snapshot.val()).length
-          : 0;
+          // Loop through each entry in the snapshot
+          Object.entries(snapshot.val()).forEach(([key, item]) => {
+            // Initialize count for this entry if not already done
 
-        setCount(count);
+            var index = 0;
+            for (const key in item) {
+              if (item.hasOwnProperty(key)) {
+                const value = item[key];
+                // Check if the payer is "Ocan David"
+                if (value.payer === "Ocan David") {
+                  // Increment the count for each entry
+                  index++;
+                } else {
+                  console.log("User not found");
+                }
+              }
+            }
+            setdeniedItemsCount(index);
+
+            counts[key]++;
+
+            // console.log(key);
+          });
+        } else {
+          console.log("No data found for the collection");
+          // Handle the case where no data is found
+        }
       },
       (error) => {
-        console.error("Error fetching collection count:", error);
-        setCount(-1); // Handle the error appropriately
+        console.error("Error fetching collection data:", error);
+        // Handle the error appropriately
       }
     );
   };
@@ -56,7 +104,7 @@ const Home = () => {
   useEffect(() => {
     getdeniedItemsCount("deniedList", setdeniedItemsCount);
   }, []);
-  
+
   return (
     <div id="home" className="px-10 py-12 md:py-5 w-full">
       <div className="flex items-center justify-between">
