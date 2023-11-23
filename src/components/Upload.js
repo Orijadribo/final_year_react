@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, get } from "firebase/database";
+import { ToastContainer, toast } from "react-toastify";
 
 const Upload = () => {
   const fetchDatabaseData = async () => {
@@ -41,19 +42,29 @@ const Upload = () => {
 
       if (matchingRecord) {
         console.log("Details match an existing record in the database.");
-        setSubmission(true);
-        setUnverified(true);
+        // setSubmission(true);
+        // setUnverified(true);
+
+        //Floating message to the user upon successfull verification
+        toast.success("Verification Successfull!", {
+          position: toast.POSITION.TOP_CENTER,
+        });
       } else {
         console.log(
           "Details do not match any existing records in the database."
         );
-        setSubmission(true);
-        setUnverified(false);
+        // setSubmission(true);
+        // setUnverified(false);
+
+        //Floating message to the user upon unsuccessfull verification
+        toast.error("Verification Unsuccessfull!", {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     }
 
     // Reset isVisible to true after each submission
-    setIsVisible(true);
+    // setIsVisible(true);
 
     handleClearForm();
   };
@@ -63,25 +74,25 @@ const Upload = () => {
     document.getElementById("uploadForm").reset();
   };
 
-  const [verified, setUnverified] = useState(false);
-  const [submission, setSubmission] = useState(false);
+  // const [verified, setUnverified] = useState(false);
+  // const [submission, setSubmission] = useState(false);
 
-  const [isVisible, setIsVisible] = useState(true);
+  // const [isVisible, setIsVisible] = useState(true);
 
-    useEffect(() => {
-      const timeoutId = setTimeout(() => {
-        setIsVisible(false);
-      }, 5000);
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => {
+  //     setIsVisible(false);
+  //   }, 5000);
 
-      // Clear the timeout to avoid side effects on component unmount or state changes
-      return () => clearTimeout(timeoutId);
-    }, [isVisible]);
+  //   // Clear the timeout to avoid side effects on component unmount or state changes
+  //   return () => clearTimeout(timeoutId);
+  // }, [isVisible]);
 
   return (
     <div id="upload" className={`px-10 py-12 md:py-5 w-full `}>
       {/* Display message upon successfull or unsuccessful verification */}
 
-      <div>
+      {/* <div>
         {isVisible && (
           <div
             className={`sticky z-50 top-[200px] right-0 text-center w-[100%] ${
@@ -104,7 +115,7 @@ const Upload = () => {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
 
       <h1 className="font-bold text-2xl">Upload Form</h1>
       <div className="py-10">
@@ -225,6 +236,7 @@ const Upload = () => {
           </div>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
