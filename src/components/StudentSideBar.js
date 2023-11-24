@@ -12,7 +12,6 @@ const StudentSideBar = ({setSelectedSection}) => {
   const navigate = useNavigate();
 
   const handleSectionChange = (section) => {
-    console.log(setSelectedSection);
     setSelectedSection(section);
     navigate(`/${section}`);
   };
