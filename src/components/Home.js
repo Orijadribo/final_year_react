@@ -9,46 +9,52 @@ const Home = () => {
     const db = getDatabase();
     const collectionRef = ref(db, verifiedList);
 
-   onValue(
-     collectionRef,
-     (snapshot) => {
-       if (snapshot.exists()) {
-         // Initialize an object to store counts for each "Ocan David" entry
-         const counts = {};
+    onValue(
+      collectionRef,
+      (snapshot) => {
+        if (snapshot.exists()) {
+          // Initialize an object to store counts for each "Ocan David" entry
+          const counts = {};
+          var index = 0;
 
-         // Loop through each entry in the snapshot
-         Object.entries(snapshot.val()).forEach(([key, item]) => {
-           // Initialize count for this entry if not already done
+          // Loop through each entry in the snapshot
+          Object.entries(snapshot.val()).forEach(([key, item]) => {
+            // Initialize count for this entry if not already done
 
-           var index = 0;
-           for (const key in item) {
-             if (item.hasOwnProperty(key)) {
-               const value = item[key];
-               // Check if the payer is "Ocan David"
-               if (value.payer === "Ocan David") {
-                 // Increment the count for each entry
-                 index++;
-               } else {
-                 console.log("User not found");
-               }
-             }
-           }
-           setverifiedItemsCount(index);
+            for (const innerkey in item) {
+              if (item.hasOwnProperty(innerkey)) {
+                const value = item[innerkey];
+                // Check if the payer is "Ocan David"
+                if (value.payer === "Ocan David") {
+                  // Increment the count for each entry
+                  index++;
+                }
+              }
+            }
 
-           counts[key]++;
+            counts[key]++;
 
-           // console.log(key);
-         });
-       } else {
-         console.log("No data found for the collection");
-         // Handle the case where no data is found
-       }
-     },
-     (error) => {
-       console.error("Error fetching collection data:", error);
-       // Handle the error appropriately
-     }
-   );
+            // console.log(key);
+          });
+
+          // Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
+          if (index > 0) {
+            console.log("User found. Count:", index);
+          } else {
+            console.log("User not found");
+          }
+
+          setverifiedItemsCount(index);
+        } else {
+          console.log("No data found for the collection");
+          // Handle the case where no data is found
+        }
+      },
+      (error) => {
+        console.error("Error fetching collection data:", error);
+        // Handle the error appropriately
+      }
+    );
   };
 
   const getdeniedItemsCount = (deniedList, setCount) => {
@@ -61,30 +67,36 @@ const Home = () => {
         if (snapshot.exists()) {
           // Initialize an object to store counts for each "Ocan David" entry
           const counts = {};
+          var index = 0;
 
           // Loop through each entry in the snapshot
           Object.entries(snapshot.val()).forEach(([key, item]) => {
             // Initialize count for this entry if not already done
 
-            var index = 0;
-            for (const key in item) {
-              if (item.hasOwnProperty(key)) {
-                const value = item[key];
+            for (const innerkey in item) {
+              if (item.hasOwnProperty(innerkey)) {
+                const value = item[innerkey];
                 // Check if the payer is "Ocan David"
-                if (value.payer === "Ocan David") {
+                if (value.payer === "Daniel David") {
                   // Increment the count for each entry
                   index++;
-                } else {
-                  console.log("User not found");
                 }
               }
             }
-            setdeniedItemsCount(index);
 
             counts[key]++;
 
             // console.log(key);
           });
+
+          // Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
+          if (index > 0) {
+            console.log("User found. Count:", index);
+          } else {
+            console.log("User not found");
+          }
+
+          setdeniedItemsCount(index);
         } else {
           console.log("No data found for the collection");
           // Handle the case where no data is found

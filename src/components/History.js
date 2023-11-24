@@ -135,7 +135,7 @@ const History = () => {
               {verifiedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center pt-5 w-full bg-white rounded-2xl shadow-lg px-5"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-10"
                 >
                   <div className="font-bold text-lg">{item.id}</div>
                   <div className="flex items-center justify-between py-1">
@@ -154,7 +154,6 @@ const History = () => {
                     <p>Registration No: </p>
                     <p>{item.regNo}</p>
                   </div>
-                  <hr className="w-full mt-5"></hr>
                 </li>
               ))}
             </ul>
@@ -164,7 +163,7 @@ const History = () => {
               {deniedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-10"
                 >
                   <div className="font-bold text-lg">{item.id}</div>
                   <div className="flex items-center justify-between py-1">
