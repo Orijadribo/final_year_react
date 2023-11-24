@@ -23,11 +23,27 @@ const History = () => {
       const dbRef = ref(database, "verifiedList");
 
       const unsubscribe = onValue(dbRef, (snapshot) => {
+        // Fetch data from the real time database
         const data = snapshot.val();
-        const updatedItems = data
-          ? Object.entries(data).map(([id, item]) => ({ id, ...item }))
-          : [];
-        setverifiedItems(updatedItems);
+
+        // Go over each of the entries in the denied list table
+        Object.entries(data).forEach(([key, item]) => {
+          // Iterate over each entry in the entries under denied list
+          // If entry exists, return a list as an id, item pair else return an empty list
+          const updatedItems = item
+            ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+            : [];
+          // Then we move into the individual items inside the list
+          for (const innerkey in item) {
+            if (item.hasOwnProperty(innerkey)) {
+              const value = item[innerkey];
+              // Check if the payer is "Ocan David"
+              if (value.payer === "Ocan David") {
+                setverifiedItems(updatedItems);
+              }
+            }
+          }
+        });
       });
 
       return unsubscribe;
@@ -37,17 +53,33 @@ const History = () => {
 
     return () => unsubscribe();
   }, []);
-
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "deniedList");
 
       const unsubscribe = onValue(dbRef, (snapshot) => {
+        // Fetch data from the real time database
         const data = snapshot.val();
-        const updatedItems = data
-          ? Object.entries(data).map(([id, item]) => ({ id, ...item }))
-          : [];
-        setdeniedItems(updatedItems);
+
+        // Go over each of the entries in the denied list table
+        Object.entries(data).forEach(([key, item]) => {
+          // Iterate over each entry in the entries under denied list
+          // If entry exists, return a list as an id item pair else return an empty list
+          const updatedItems = item
+            ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+            : [];
+
+          // Then we move into the individual items inside the list
+          for (const innerkey in item) {
+            if (item.hasOwnProperty(innerkey)) {
+              const value = item[innerkey];
+              // Check if the payer is "Ocan David"
+              if (value.payer === "Ocan David") {
+                setdeniedItems(updatedItems);
+              }
+            }
+          }
+        });
       });
 
       return unsubscribe;
@@ -64,80 +96,42 @@ const History = () => {
         <h2 className="font-bold text-2xl">History</h2>
       </div>
       <div className="py-5 w-full">
-        <div className="flex justify-between py-5">
-          <div className="flex flex-col items-center justify-center">
-            <h3 className="font-bold">Transaction 1</h3>
-            <p>Amount $100</p>
-          </div>
-          <div className="flex flex-col items-center justify-center pr-5">
-            <h3 className="font-bold">Status</h3>
-            <div className="p-2">
-              <i
-                className="fa-solid fa-circle-check fa-2xl"
-                // style="color: #028056"
-              ></i>
-            </div>
-          </div>
+        {/* Buttons to show the history of transactions  */}
+        <div className="py-2 flex gap-4 justify-between">
+          <button
+            id="verifiedListBtn"
+            className="border w-full p-2 hover:bg-[#02B056] rounded-lg"
+            // onClick={openVerifiedList}
+          >
+            Last 5 Transactions
+          </button>
+          <button
+            id="verifiedListBtn"
+            className="border w-full p-2 hover:bg-[#02B056] rounded-lg"
+            onClick={openVerifiedList}
+          >
+            Verified List
+          </button>
+          <button
+            id="deniedListBtn"
+            className="border w-full p-2 hover:bg-red-500 rounded-lg"
+            onClick={openDeniedList}
+          >
+            Denied List
+          </button>
         </div>
-        <hr />
-        <div className="flex justify-between py-5">
-          <div className="flex flex-col items-center justify-center">
-            <h3 className="font-bold">Transaction 2</h3>
-            <p>Amount $100</p>
-          </div>
-          <div className="flex flex-col items-center justify-center pr-5">
-            <h3 className="font-bold">Status</h3>
-            <div className="p-2">
-              <i
-                className="fa-solid fa-circle-check fa-2xl"
-                // style="color: #028056"
-              ></i>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div className="flex justify-between py-5">
-          <div className="flex flex-col items-center justify-center">
-            <h3 className="font-bold">Transaction 3</h3>
-            <p>Amount $100</p>
-          </div>
-          <div className="flex flex-col items-center justify-center pr-5">
-            <h3 className="font-bold">Status</h3>
-            <div className="p-2">
-              <i
-                className="fa-solid fa-circle-minus fa-2xl"
-                // style="color: #f1c232"
-              ></i>
-            </div>
-          </div>
-        </div>
-        <hr />
-        <div className="flex justify-between py-5">
-          <div className="flex flex-col items-center justify-center">
-            <h3 className="font-bold">Transaction 3</h3>
-            <p>Amount $100</p>
-          </div>
-          <div className="flex flex-col items-center justify-center pr-5">
-            <h3 className="font-bold">Status</h3>
-            <div className="p-2">
-              <i
-                className="fa-solid fa-circle-xmark fa-2xl"
-                // style="color: #cc0000"
-              ></i>
-            </div>
-          </div>
-        </div>
-        <hr />
 
         <div className="overflow-y-auto">
           <div className={`${verifiedList ? "" : "hidden"}`}>
+            <h1 className="font-bold text-xl pt-10">Verified Items</h1>
+
             <ul className="py-5 w-full">
               {verifiedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-10"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-5"
                 >
-                  <div className="font-bold text-lg">{item.id}</div>
+                  <div className="font-bold text-lg">{item.payer}</div>
                   <div className="flex items-center justify-between py-1">
                     <p>Amount: </p>
                     <p>{item.amount}</p>
@@ -145,10 +139,6 @@ const History = () => {
                   <div className="flex items-center justify-between py-1">
                     <p>Date:</p>
                     <p>{item.date}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Payer: </p>
-                    <p>{item.payer}</p>
                   </div>
                   <div className="flex items-center justify-between py-1">
                     <p>Registration No: </p>
@@ -158,14 +148,17 @@ const History = () => {
               ))}
             </ul>
           </div>
+
           <div className={`${deniedList ? "" : "hidden"}`}>
-            <ul className="py-5 w-full">
+            <h1 className="font-bold text-xl py-10">Denied Items</h1>
+
+            <ul className="w-full max-h-[600px] overflow-hidden overflow-y-auto rounded-2xl">
               {deniedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-10"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
                 >
-                  <div className="font-bold text-lg">{item.id}</div>
+                  <div className="font-bold text-lg">{item.payer}</div>
                   <div className="flex items-center justify-between py-1">
                     <p>Amount: </p>
                     <p>{item.amount}</p>
@@ -173,10 +166,6 @@ const History = () => {
                   <div className="flex items-center justify-between py-1">
                     <p>Date:</p>
                     <p>{item.date}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Payer: </p>
-                    <p>{item.payer}</p>
                   </div>
                   <div className="flex items-center justify-between pt-1">
                     <p>Registration No: </p>
@@ -187,23 +176,6 @@ const History = () => {
               ))}
             </ul>
           </div>
-        </div>
-
-        <div className="py-2 flex gap-4 justify-between">
-          <button
-            id="verifiedListBtn"
-            className="border w-full p-2 bg-[#02B056] rounded-lg"
-            onClick={openVerifiedList}
-          >
-            Verified List
-          </button>
-          <button
-            id="deniedListBtn"
-            className="border w-full p-2 bg-red-500 rounded-lg"
-            onClick={openDeniedList}
-          >
-            Denied List
-          </button>
         </div>
       </div>
     </div>
