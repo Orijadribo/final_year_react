@@ -91,7 +91,7 @@ const OptionsBar = () => {
                     </div>
                     <hr className="w-full" />
                     <div className="flex flex-col items-center justify-center hover:rounded-xl hover:bg-[#F4F6F9] py-1 w-full cursor-pointer">
-                      <Link to="/login">
+                      <Link to="/">
                         <p>Sign Out</p>
                       </Link>
                     </div>
