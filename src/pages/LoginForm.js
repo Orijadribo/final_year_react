@@ -1,22 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
 import { kiu_logo_2 } from "../assets";
 import { useNavigate } from "react-router-dom";
 
-
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = () => {
-    // Perform your login logic here
+    // Validate email format
+    const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
 
-    // After successful login, navigate to studentdashboard/home
-    navigate("/dashboard/");
+    if (!emailRegex.test(email)) {
+      setError("Invalid email format");
+      return;
+    }
+
+    // Perform login logic based on email and password
+    if (email === "david.ocan@studmc.kiu.ac.ug" && password === "12345678") {
+      // Redirect to Home.js
+      navigate("/dashboard");
+    } else if (email === "daniel@studmc.kiu.ac.ug" && password === "123456") {
+      // Redirect to MainContent.js
+      navigate("/MainContent");
+    } else {
+      // Display an error for incorrect credentials
+      setError("Invalid email or password");
+    }
   };
+
   return (
     <div className="flex items-center justify-center w-screen m-auto h-screen bg-[#F4F6F9]">
-      {/* Login form container */}
       <div className="flex flex-col items-center justify-center rounded-lg w-[600px] bg-[#FFFFFF] p-14 shadow-xl">
-        {/* Logo and title section */}
         <div className="flex flex-col items-center justify-center w-1/2">
           <img src={kiu_logo_2} alt="KIU Logo" />
           <h1 className="py-5 font-medium font-titleFont text-center text-xl">
@@ -24,22 +40,24 @@ const LoginForm = () => {
           </h1>
         </div>
 
-        {/* Login form */}
         <form className="flex flex-col w-full" action="">
           <label className="pb-2" htmlFor="email">
             Email
           </label>
           <input
-            className="border rounded-lg p-2 mb-5"
+            className={`border rounded-lg p-2 mb-5 ${error ? "border-red-500" : ""}`}
             id="email"
             name="email"
             type="email"
             placeholder="Enter your school email address"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
-          {/* Email input error message */}
-          <div id="emailError" className="error-message"></div>
+          <div id="emailError" className="error-message">
+            {error && <p>{error}</p>}
+          </div>
 
           <label className="pb-2" htmlFor="password">
             Password
@@ -48,10 +66,11 @@ const LoginForm = () => {
             className="border rounded-lg p-2 mb-5"
             id="password"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </form>
 
-        {/* Remember me checkbox and forgot password link */}
         <div className="flex items-center justify-between w-full pb-5">
           <a className="text-sm underline" href="">
             Forgot your password?
@@ -69,7 +88,6 @@ const LoginForm = () => {
           </div>
         </div>
 
-        {/* Login button with custom background color */}
         <button
           className="w-full rounded-lg py-2 bg-[#02B056]"
           type="button"
@@ -78,6 +96,7 @@ const LoginForm = () => {
         >
           Login
         </button>
+
         <div className="text-sm mt-5">
           Don't have an account?<span> </span>
           <span className="text-[#02B056] underline">

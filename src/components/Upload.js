@@ -1,125 +1,115 @@
-import React, { useState, useEffect } from "react";
-import { getDatabase, ref, get } from "firebase/database";
+import React, { useState } from "react";
+import { getDatabase, get, ref, push, set } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 
 const Upload = () => {
-  const fetchDatabaseData = async () => {
-    const db = getDatabase();
-    const collectionRef = ref(db, "bankDetails"); // Replace with your actual collection name
-    const snapshot = await get(collectionRef);
+  const [error, setError] = useState("");
 
-    if (snapshot.exists()) {
-      // Extract data from the snapshot
-      const databaseData = snapshot.val();
-      return databaseData;
-    } else {
-      console.log("No data found in the collection.");
-      return null;
+  const sendDataToDatabase = async (data, listName) => {
+    const db = getDatabase();
+    const listRef = ref(db, listName);
+  
+    try {
+      const { payer, recordKey, ...details } = data;
+  
+      // Fetch existing data from the database
+      const existingData = await fetchDatabaseData(listName);
+  
+      // Create or update the payer's data
+      const payerData = {
+        ...existingData[payer],
+        [recordKey]: {
+          amount: details.amount,
+          date: details.date,
+          payer: details.payer,
+          regNo: details.regNo,
+        },
+      };
+  
+      // Set the data in the database
+      await set(ref(listRef, payer), payerData);
+  
+      console.log(`Data successfully added to ${listName}. Payer: ${payer}, Record Key: ${recordKey}`);
+    } catch (error) {
+      console.error(`Error adding data to ${listName}:`, error.message);
+    }
+  };
+  
+
+
+  const fetchDatabaseData = async (listName) => {
+    const db = getDatabase();
+    const listRef = ref(db, listName);
+
+    try {
+      const snapshot = await get(listRef);
+      if (snapshot.exists()) {
+        return snapshot.val();
+      } else {
+        console.log(`No data available in ${listName}`);
+        return {};
+      }
+    } catch (error) {
+      console.error(`Error fetching data from the database (${listName}):`, error.message);
+      return {};
     }
   };
 
+
   const handleFormSubmission = async (event) => {
     event.preventDefault();
-
-    // Get form data
-    const amount = parseFloat(document.getElementById("amount").value);
+  
+    const amount = Number(document.getElementById("amount").value);
     const date = document.getElementById("date").value;
     const regNo = document.getElementById("regNo").value;
     const payer = document.getElementById("payer").value;
-
-    // Fetch data from the database
-    const databaseData = await fetchDatabaseData();
-
-    // Compare form data with database data
-    if (databaseData) {
-      const matchingRecord = Object.values(databaseData).find(
+  
+    const bankDetails = await fetchDatabaseData("bankDetails");
+    const deniedList = await fetchDatabaseData("deniedList");
+    const verifiedList = await fetchDatabaseData("verifiedList");
+  
+    const successMessage = "Verification Successful!";
+    const errorMessage = "Verification Unsuccessful!";
+  
+    if (bankDetails && deniedList && verifiedList) {
+      const matchingRecordBank = Object.values(bankDetails).find(
         (record) =>
           record.amount === amount &&
           record.date === date &&
           record.regNo === regNo &&
           record.payer === payer
       );
-
-      if (matchingRecord) {
-        console.log("Details match an existing record in the database.");
-        // setSubmission(true);
-        // setUnverified(true);
-
-        //Floating message to the user upon successfull verification
-        toast.success("Verification Successfull!", {
+  
+      if (matchingRecordBank) {
+        console.log("Details match an existing record in the bank details.");
+        const listName = "verifiedList";
+        sendDataToDatabase({ amount, date, regNo, payer }, listName);
+        toast.success(successMessage, {
           position: toast.POSITION.TOP_CENTER,
         });
       } else {
-        console.log(
-          "Details do not match any existing records in the database."
-        );
-        // setSubmission(true);
-        // setUnverified(false);
-
-        //Floating message to the user upon unsuccessfull verification
-        toast.error("Verification Unsuccessfull!", {
+        console.log("Details do not match any existing records in the bank details.");
+        const listName = "deniedList";
+        sendDataToDatabase({ amount, date, regNo, payer }, listName);
+        toast.error(errorMessage, {
           position: toast.POSITION.TOP_CENTER,
         });
       }
     }
-
-    // Reset isVisible to true after each submission
-    // setIsVisible(true);
-
+  
     handleClearForm();
   };
+  
+  
 
   const handleClearForm = () => {
-    // Clear all form fields
     document.getElementById("uploadForm").reset();
   };
 
-  // const [verified, setUnverified] = useState(false);
-  // const [submission, setSubmission] = useState(false);
-
-  // const [isVisible, setIsVisible] = useState(true);
-
-  // useEffect(() => {
-  //   const timeoutId = setTimeout(() => {
-  //     setIsVisible(false);
-  //   }, 5000);
-
-  //   // Clear the timeout to avoid side effects on component unmount or state changes
-  //   return () => clearTimeout(timeoutId);
-  // }, [isVisible]);
-
   return (
     <div id="upload" className={`px-10 py-12 md:py-5 w-full `}>
-      {/* Display message upon successfull or unsuccessful verification */}
-
-      {/* <div>
-        {isVisible && (
-          <div
-            className={`sticky z-50 top-[200px] right-0 text-center w-[100%] ${
-              submission ? "" : "hidden"
-            }`}
-          >
-            <div
-              className={`bg-green-200 rounded-lg p-2 ${
-                verified ? "" : "hidden"
-              }`}
-            >
-              Verification successfull
-            </div>
-            <div
-              className={`bg-red-200 rounded-lg p-2 ${
-                verified ? "hidden" : ""
-              }`}
-            >
-              Verification unsuccessfull
-            </div>
-          </div>
-        )}
-      </div> */}
-
       <h1 className="font-bold text-2xl">Upload Form</h1>
       <div className="py-10">
-        {/* Update the form with action and submit button */}
         <form
           action=""
           className="flex flex-col"
