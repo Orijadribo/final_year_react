@@ -5,17 +5,27 @@ import database from "../api/Firebase";
 const History = () => {
   const [verifiedItems, setverifiedItems] = useState([]);
   const [deniedItems, setdeniedItems] = useState([]);
+  const [lastFive, setLastFive] = useState([]);
   const [verifiedList, setverifiedList] = useState(false);
   const [deniedList, setdeniedList] = useState(false);
+  const [lastFiveList, setLastFiveList] = useState(true);
 
   const openVerifiedList = () => {
     setverifiedList(!verifiedList);
     setdeniedList(false);
+    setLastFiveList(false);
   };
 
   const openDeniedList = () => {
     setdeniedList(!deniedList);
     setverifiedList(false);
+    setLastFiveList(false);
+  };
+
+  const openLastFive = () => {
+    setLastFiveList(!lastFiveList);
+    setverifiedList(false);
+    setdeniedList(false);
   };
 
   useEffect(() => {
@@ -97,24 +107,32 @@ const History = () => {
       </div>
       <div className="py-5 w-full">
         {/* Buttons to show the history of transactions  */}
-        <div className="py-2 flex gap-4 justify-between">
+        <div className="flex border-2 p-1 border-neutral-200 justify-between rounded-lg">
           <button
             id="verifiedListBtn"
-            className="border w-full p-2 hover:bg-[#02B056] rounded-lg"
-            // onClick={openVerifiedList}
+            className={`w-full p-2 hover:bg-[#565656] rounded-lg ${
+              lastFiveList ? "bg-[#565656]" : ""
+            }`}
+            onClick={openLastFive}
           >
             Last 5 Transactions
           </button>
+          <div className="border-2 border-neutral-200 rounded-full m-2"></div>
           <button
             id="verifiedListBtn"
-            className="border w-full p-2 hover:bg-[#02B056] rounded-lg"
+            className={`w-full p-2 hover:bg-[#02B056] rounded-lg ${
+              verifiedList ? "bg-[#02B056]" : ""
+            }`}
             onClick={openVerifiedList}
           >
             Verified List
           </button>
+          <div className="border-2 border-neutral-200 rounded-full m-2"></div>
           <button
             id="deniedListBtn"
-            className="border w-full p-2 hover:bg-red-500 rounded-lg"
+            className={`w-full p-2 hover:bg-[#b00202] rounded-lg ${
+              deniedList ? "bg-[#b00202]" : ""
+            }`}
             onClick={openDeniedList}
           >
             Denied List
@@ -125,7 +143,7 @@ const History = () => {
           <div className={`${verifiedList ? "" : "hidden"}`}>
             <h1 className="font-bold text-xl pt-10">Verified Items</h1>
 
-            <ul className="py-5 w-full">
+            <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
               {verifiedItems.map((item) => (
                 <li
                   key={item.id}
@@ -150,9 +168,9 @@ const History = () => {
           </div>
 
           <div className={`${deniedList ? "" : "hidden"}`}>
-            <h1 className="font-bold text-xl py-10">Denied Items</h1>
+            <h1 className="font-bold text-xl py-5">Denied Items</h1>
 
-            <ul className="w-full max-h-[600px] overflow-hidden overflow-y-auto rounded-2xl">
+            <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">
               {deniedItems.map((item) => (
                 <li
                   key={item.id}
