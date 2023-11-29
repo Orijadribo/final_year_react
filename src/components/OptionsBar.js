@@ -6,6 +6,8 @@ import { IoIosArrowUp } from "react-icons/io";
 import { profile_pic } from "../assets";
 import { Link } from "react-router-dom";
 import { VscFeedback } from "react-icons/vsc";
+import "firebase/auth";
+import database from "../api/Firebase";
 
 const OptionsBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,18 +30,28 @@ const OptionsBar = () => {
     };
   }, []);
 
+  const handleSignOut = async () => {
+    try {
+      await database.auth().signOut();
+      // Additional cleanup or state updates can be done here
+      console.log("User signed out successfully");
+    } catch (error) {
+      console.error("Error signing not:", error);
+    }
+  };
+
   return (
     <div className="w-[95%] hidden md:block sticky z-50 top-0 right-0">
       {/* User Information and shortcuts bar */}
       <div className="">
         <div className="flex flex-row items-center justify-between gap-4 bg-white px-4 py-2 rounded-xl shadow-sm w-full">
           {/* Search */}
-          <div className="flex items-center justify-center py-1  rounded-md">
+          <div className="flex items-center justify-start py-1 w-full">
             <div className="">
               <CiSearch />
             </div>
             <input
-              className="border-none focus:outline-none px-2 "
+              className="border-none focus:outline-none px-2 w-full"
               type="search"
               name="search"
               id="search"
@@ -49,8 +61,8 @@ const OptionsBar = () => {
           <div className="flex flex-row items-center justify-center gap-4">
             <div className="px-5">
               <div className="flex flex-row items-center relative justify-center px-1 gap-5">
-                <div>
-                <VscFeedback />
+                <div className="cursor-pointer">
+                  <VscFeedback />
                 </div>
                 <div className="cursor-pointer">
                   <FaBell />
@@ -91,8 +103,8 @@ const OptionsBar = () => {
                     </div>
                     <hr className="w-full" />
                     <div className="flex flex-col items-center justify-center hover:rounded-xl hover:bg-[#F4F6F9] py-1 w-full cursor-pointer">
-                      <Link to="/login">
-                        <p>Sign Out</p>
+                      <Link to="/">
+                        <p onClick={handleSignOut}>Sign Out</p>
                       </Link>
                     </div>
                   </div>

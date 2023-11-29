@@ -1,0 +1,93 @@
+{
+  "bankDetails": [
+    null,
+    {
+      "amount": 1000,
+      "date": "2023-11-15",
+      "payer": "Ocan David",
+      "regNo": "2021-01-02652"
+    },
+    {
+      "amount": 1500,
+      "date": "2023-11-16",
+      "payer": "Daniel Orija",
+      "regNo": "2020-08-01895"
+    },
+    {
+      "amount": 800,
+      "date": "2023-11-17",
+      "payer": "Karberg Erik",
+      "regNo": "2021-01-02246"
+    }
+  ],
+  "verifiedList": {
+    "Ocan David": {
+      "-NjwTx2dm2KGMfhILybV": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      }
+    }
+  },
+  "deniedList": {
+    "Ocan David": {
+      "-NjwTx2dm2KGMfhILybV": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2hKCIjnP8F1riN": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2oLnZz8-c3cUCv": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2rK_TNRKncgviL": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2rK_TNRKicgviL": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Ocan David",
+        "regNo": "2021-01-02652"
+      }
+    },
+    "Daniel David": {
+      "-NjwTx2dm2KGMfhILybV": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Daniel David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2hKCIjnP8F1riN": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Daniel David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2oLnZz8-c3cUCv": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Daniel David",
+        "regNo": "2021-01-02652"
+      },
+      "-NjwTx2rK_TNRKncgviL": {
+        "amount": 1000,
+        "date": "2023-11-15",
+        "payer": "Daniel David",
+        "regNo": "2021-01-02652"
+      }
+    }
+  }
+}

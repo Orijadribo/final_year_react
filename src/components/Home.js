@@ -12,17 +12,47 @@ const Home = () => {
     onValue(
       collectionRef,
       (snapshot) => {
+        if (snapshot.exists()) {
+          // Initialize an object to store counts for each "Ocan David" entry
+          const counts = {};
+          var index = 0;
 
-        // Use Object.keys().length to get the count of items
-        const count = snapshot.exists()
-          ? Object.keys(snapshot.val()).length
-          : 0;
+          // Loop through each entry in the snapshot
+          Object.entries(snapshot.val()).forEach(([key, item]) => {
+            // Initialize count for this entry if not already done
 
-        setCount(count);
+            for (const innerkey in item) {
+              if (item.hasOwnProperty(innerkey)) {
+                const value = item[innerkey];
+                // Check if the payer is "Ocan David"
+                if (value.payer === "Ocan David") {
+                  // Increment the count for each entry
+                  index++;
+                }
+              }
+            }
+
+            counts[key]++;
+
+            // console.log(key);
+          });
+
+          // Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
+          if (index > 0) {
+            console.log("User found. Count:", index);
+          } else {
+            console.log("User not found");
+          }
+
+          setverifiedItemsCount(index);
+        } else {
+          console.log("No data found for the collection");
+          // Handle the case where no data is found
+        }
       },
       (error) => {
-        console.error("Error fetching collection count:", error);
-        setCount(-1); // Handle the error appropriately
+        console.error("Error fetching collection data:", error);
+        // Handle the error appropriately
       }
     );
   };
@@ -34,17 +64,47 @@ const Home = () => {
     onValue(
       collectionRef,
       (snapshot) => {
+        if (snapshot.exists()) {
+          // Initialize an object to store counts for each "Ocan David" entry
+          const counts = {};
+          var index = 0;
 
-        // Use Object.keys().length to get the count of items
-        const count = snapshot.exists()
-          ? Object.keys(snapshot.val()).length
-          : 0;
+          // Loop through each entry in the snapshot
+          Object.entries(snapshot.val()).forEach(([key, item]) => {
+            // Initialize count for this entry if not already done
 
-        setCount(count);
+            for (const innerkey in item) {
+              if (item.hasOwnProperty(innerkey)) {
+                const value = item[innerkey];
+                // Check if the payer is "Ocan David"
+                if (value.payer === "Daniel David") {
+                  // Increment the count for each entry
+                  index++;
+                }
+              }
+            }
+
+            counts[key]++;
+
+            // console.log(key);
+          });
+
+          // Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
+          if (index > 0) {
+            console.log("User found. Count:", index);
+          } else {
+            console.log("User not found");
+          }
+
+          setdeniedItemsCount(index);
+        } else {
+          console.log("No data found for the collection");
+          // Handle the case where no data is found
+        }
       },
       (error) => {
-        console.error("Error fetching collection count:", error);
-        setCount(-1); // Handle the error appropriately
+        console.error("Error fetching collection data:", error);
+        // Handle the error appropriately
       }
     );
   };
@@ -56,7 +116,7 @@ const Home = () => {
   useEffect(() => {
     getdeniedItemsCount("deniedList", setdeniedItemsCount);
   }, []);
-  
+
   return (
     <div id="home" className="px-10 py-12 md:py-5 w-full">
       <div className="flex items-center justify-between">
