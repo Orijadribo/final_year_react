@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { kiu_logo_2 } from "../assets";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../api/Firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -8,7 +12,33 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleLogin = () => {
+  // const handleLogin = () => {
+  //   // Validate email format
+  //   const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
+
+  //   if (!emailRegex.test(email)) {
+  //     setError("Invalid email format");
+  //     return;
+  //   }
+
+  //   // Perform login logic based on email and password
+  //   if (email === "david.ocan@studmc.kiu.ac.ug" && password === "12345678") {
+  //     // Redirect to Home.js
+  //     navigate("/dashboard");
+  //   } else if (email === "daniel@studmc.kiu.ac.ug" && password === "123456") {
+  //     // Redirect to MainContent.js
+  //     navigate("/MainContent");
+  //   } else {
+  //     // Display an error for incorrect credentials
+  //     setError("Invalid email or password");
+  //   }
+  // };
+
+  // Perform login logic based on email and password
+  const handleLogin = (e) => {
+    // Prevent the default form submission behavior
+    e.preventDefault();
+
     // Validate email format
     const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
 
@@ -17,17 +47,43 @@ const LoginForm = () => {
       return;
     }
 
-    // Perform login logic based on email and password
-    if (email === "david.ocan@studmc.kiu.ac.ug" && password === "12345678") {
-      // Redirect to Home.js
-      navigate("/dashboard");
-    } else if (email === "daniel@studmc.kiu.ac.ug" && password === "123456") {
-      // Redirect to MainContent.js
-      navigate("/MainContent");
-    } else {
-      // Display an error for incorrect credentials
-      setError("Invalid email or password");
-    }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // console.log(userCredential);
+        //Floating message to the user upon successfull verification
+        toast.success("Login Successful!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 500,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "#02B056",
+            color: "#fff",
+            textAlign: "center",
+          },
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
+          onClose: () => {
+            // Redirect to Home.js after the toast message is closed
+            navigate("/dashboard");
+          },
+        });
+      })
+      .catch((error) => {
+        console.log("Invalid email or password.");
+        toast.error("Login Unsuccessfull!", {
+          position: toast.POSITION.TOP_CENTER,
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "red",
+            color: "#fff",
+            textAlign: "center",
+          },
+        });
+      });
   };
 
   return (
@@ -45,7 +101,9 @@ const LoginForm = () => {
             Email
           </label>
           <input
-            className={`border rounded-lg p-2 mb-5 ${error ? "border-red-500" : ""}`}
+            className={`border rounded-lg p-2 mb-5 ${
+              error ? "border-red-500" : ""
+            }`}
             id="email"
             name="email"
             type="email"
@@ -56,7 +114,7 @@ const LoginForm = () => {
           />
 
           <div id="emailError" className="error-message">
-            {error && <p>{error}</p>}
+            {error && <p className="text-red-500 mt-[-20px]">{error}</p>}
           </div>
 
           <label className="pb-2" htmlFor="password">
@@ -90,7 +148,7 @@ const LoginForm = () => {
 
         <button
           className="w-full rounded-lg py-2 bg-[#02B056]"
-          type="button"
+          type="submit"
           id="loginButton"
           onClick={handleLogin}
         >
@@ -104,6 +162,7 @@ const LoginForm = () => {
           </span>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

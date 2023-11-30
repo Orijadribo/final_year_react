@@ -9,6 +9,8 @@ import { VscFeedback } from "react-icons/vsc";
 import "firebase/auth";
 import { auth } from "../api/Firebase";
 import { signOut } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OptionsBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,18 +35,27 @@ const OptionsBar = () => {
   }, []);
 
   const handleSignOut = () => {
-    // try {
-    //   await signOut(auth);
-    //   // Additional cleanup or state updates can be done here
-    //   console.log("User signed out successfully");
-    // } catch (error) {
-    //   console.error("Error signing not:", error);
-    // }
-
-
     signOut(auth)
       .then(() => {
-        navigate(`/`);
+        //Floating message to the user upon successfull verification
+        toast.success("Sign Out Successful!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 500,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "#02B056",
+            color: "#fff",
+            textAlign: "center",
+          },
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
+          onClose: () => {
+            // Redirect to login after the toast message is closed
+            navigate(`/`);
+          },
+        });
+
         console.log("User signed out successfully");
       })
       .catch((error) => console.log("Error signing not:", error));
@@ -124,6 +135,7 @@ const OptionsBar = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
