@@ -1,6 +1,15 @@
 // firebase.js
 import { initializeApp } from "firebase/app";
 import { getDatabase } from "firebase/database";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAPcuSwsWJgjbVCI2uaj9x3Fg7buTvgMsM",
@@ -18,4 +27,7 @@ const app = initializeApp(firebaseConfig);
 // Get a reference to the database
 const database = getDatabase(app);
 
-export default database;
+const auth = getAuth(app);
+
+
+export  {database, auth};

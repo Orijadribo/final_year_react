@@ -4,13 +4,15 @@ import { CiSearch } from "react-icons/ci";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { profile_pic } from "../assets";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { VscFeedback } from "react-icons/vsc";
 import "firebase/auth";
-import database from "../api/Firebase";
+import { auth } from "../api/Firebase";
+import { signOut } from "firebase/auth";
 
 const OptionsBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleNavigation = () => {
     setIsOpen(!isOpen);
@@ -30,14 +32,22 @@ const OptionsBar = () => {
     };
   }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await database.auth().signOut();
-      // Additional cleanup or state updates can be done here
-      console.log("User signed out successfully");
-    } catch (error) {
-      console.error("Error signing not:", error);
-    }
+  const handleSignOut = () => {
+    // try {
+    //   await signOut(auth);
+    //   // Additional cleanup or state updates can be done here
+    //   console.log("User signed out successfully");
+    // } catch (error) {
+    //   console.error("Error signing not:", error);
+    // }
+
+
+    signOut(auth)
+      .then(() => {
+        navigate(`/`);
+        console.log("User signed out successfully");
+      })
+      .catch((error) => console.log("Error signing not:", error));
   };
 
   return (
@@ -103,9 +113,9 @@ const OptionsBar = () => {
                     </div>
                     <hr className="w-full" />
                     <div className="flex flex-col items-center justify-center hover:rounded-xl hover:bg-[#F4F6F9] py-1 w-full cursor-pointer">
-                      <Link to="/">
-                        <p onClick={handleSignOut}>Sign Out</p>
-                      </Link>
+                      {/* <Link to="/"> */}
+                      <p onClick={handleSignOut}>Sign Out</p>
+                      {/* </Link> */}
                     </div>
                   </div>
                 </div>

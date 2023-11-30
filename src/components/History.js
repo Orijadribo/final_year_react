@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
-import database from "../api/Firebase";
+import { database } from "../api/Firebase";
 
 const History = () => {
   const [verifiedItems, setverifiedItems] = useState([]);
@@ -11,19 +11,25 @@ const History = () => {
   const [lastFiveList, setLastFiveList] = useState(true);
 
   const openVerifiedList = () => {
-    setverifiedList(!verifiedList);
+    if (!verifiedList) {
+      setverifiedList(!verifiedList);
+    }
     setdeniedList(false);
     setLastFiveList(false);
   };
 
   const openDeniedList = () => {
-    setdeniedList(!deniedList);
+    if (!deniedList) {
+      setdeniedList(!deniedList);
+    }
     setverifiedList(false);
     setLastFiveList(false);
   };
 
   const openLastFive = () => {
-    setLastFiveList(!lastFiveList);
+    if (!lastFiveList) {
+      setLastFiveList(!lastFiveList);
+    }
     setverifiedList(false);
     setdeniedList(false);
   };

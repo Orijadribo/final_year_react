@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
-import database from "../api/Firebase";
+import { database } from "../api/Firebase";
 
 const Notifications = () => {
   const [items, setItems] = useState([]);
