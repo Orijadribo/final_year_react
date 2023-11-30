@@ -11,8 +11,10 @@ import { auth } from "../api/Firebase";
 import { signOut } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { onAuthStateChanged } from "firebase/auth";
 
 const OptionsBar = () => {
+  const [authUser, setAuthUser] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -60,6 +62,17 @@ const OptionsBar = () => {
       })
       .catch((error) => console.log("Error signing not:", error));
   };
+
+  // to handle user information
+  useEffect(() => {
+    const listen = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setAuthUser(user);
+      } else {
+        setAuthUser(null);
+      }
+    });
+  });
 
   return (
     <div className="w-[95%] hidden md:block sticky z-50 top-0 right-0">
@@ -120,7 +133,7 @@ const OptionsBar = () => {
                       <img src={profile_pic} alt="Default Porfile pic" />
                     </div>
                     <div>
-                      <p>danielorija@studmc.kiu.ac.ug</p>
+                      <p>{authUser ? authUser.email : ""}</p>
                     </div>
                     <hr className="w-full" />
                     <div className="flex flex-col items-center justify-center hover:rounded-xl hover:bg-[#F4F6F9] py-1 w-full cursor-pointer">
