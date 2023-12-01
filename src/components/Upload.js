@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getDatabase, ref, get } from "firebase/database";
+import { getDatabase, ref, get, push, serverTimestamp } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { database } from "../api/Firebase"; // Import the database instance
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -10,15 +11,13 @@ const Upload = () => {
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
     setIsFilePicked(true);
-  }
+  };
 
   const fetchDatabaseData = async () => {
-    const db = getDatabase();
-    const collectionRef = ref(db, "bankDetails"); 
+    const collectionRef = ref(database, "bankDetails");
     const snapshot = await get(collectionRef);
 
     if (snapshot.exists()) {
-      // Extract data from the snapshot
       const databaseData = snapshot.val();
       return databaseData;
     } else {
@@ -30,16 +29,13 @@ const Upload = () => {
   const handleFormSubmission = async (event) => {
     event.preventDefault();
 
-    // Get form data
     const amount = parseFloat(document.getElementById("amount").value);
     const date = document.getElementById("date").value;
     const regNo = document.getElementById("regNo").value;
     const payer = document.getElementById("payer").value;
 
-    // Fetch data from the database
     const databaseData = await fetchDatabaseData();
 
-    // Compare form data with database data
     if (databaseData) {
       const matchingRecord = Object.values(databaseData).find(
         (record) =>
@@ -52,17 +48,31 @@ const Upload = () => {
       if (matchingRecord) {
         console.log("Details match an existing record in the database.");
 
-        //Floating message to the user upon successfull verification
-        toast.success("Verification Successfull!", {
+        const verifiedListRef = ref(database, "verifiedList");
+        push(verifiedListRef, {
+          amount,
+          date,
+          regNo,
+          payer,
+          timestamp: serverTimestamp(),
+        });
+
+        toast.success("Verification Successful!", {
           position: toast.POSITION.TOP_CENTER,
         });
       } else {
-        console.log(
-          "Details do not match any existing records in the database."
-        );
+        console.log("Details do not match any existing records in the database.");
 
-        //Floating message to the user upon unsuccessfull verification
-        toast.error("Verification Unsuccessfull!", {
+        const deniedListRef = ref(database, "deniedList");
+        push(deniedListRef, {
+          amount,
+          date,
+          regNo,
+          payer,
+          timestamp: serverTimestamp(),
+        });
+
+        toast.error("Verification Unsuccessful!", {
           position: toast.POSITION.TOP_CENTER,
         });
       }
@@ -72,7 +82,6 @@ const Upload = () => {
   };
 
   const handleClearForm = () => {
-    // Clear all form fields
     document.getElementById("uploadForm").reset();
     setSelectedFile();
   };
@@ -81,14 +90,12 @@ const Upload = () => {
     <div id="upload" className="px-10 py-12 md:py-5 w-full">
       <h1 className="font-bold text-2xl">Upload Form</h1>
       <div className="py-10">
-        {/* Update the form with action and submit button */}
         <form
           action=""
           className="flex flex-col"
           id="uploadForm"
           onSubmit={handleFormSubmission}
         >
-          {/* Amount */}
           <label htmlFor="amount" className="pb-2">
             Amount
           </label>
@@ -100,7 +107,6 @@ const Upload = () => {
             required
           />
 
-          {/* Date */}
           <label htmlFor="date" className="pb-2">
             Date
           </label>
@@ -112,7 +118,6 @@ const Upload = () => {
             required
           />
 
-          {/* Registration Number */}
           <label htmlFor="regNo" className="pb-2">
             Registration Number
           </label>
@@ -124,7 +129,6 @@ const Upload = () => {
             required
           />
 
-          {/* Payer/Payee Information */}
           <label htmlFor="payer" className="pb-2">
             Paid In By
           </label>
@@ -136,14 +140,11 @@ const Upload = () => {
             required
           />
 
-          {/* File Input */}
           <div className="flex items-center justify-center">
             <label
               htmlFor="dropzone-file"
               className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-[#02B056]/[0.1] hover:bg-[#02B056]/[0.3]"
             >
-
-              {/* Place holder for file input and change name according to file input */}
               {selectedFile ? (
                 <div>
                   <p className="mb-2 text-md text-gray-500 dark:text-gray-400">
@@ -197,7 +198,6 @@ const Upload = () => {
             </label>
           </div>
 
-          {/* Cancel and Clear Buttons */}
           <div className="flex items-center justify-center gap-5 pt-5">
             <div className="w-full">
               <button
@@ -208,7 +208,6 @@ const Upload = () => {
                 Clear
               </button>
             </div>
-            {/* Submit Button */}
             <div className="w-full">
               <button
                 className="border rounded-lg p-2 md:px-20 bg-[#02B056] w-full"
