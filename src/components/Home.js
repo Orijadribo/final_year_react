@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { getDatabase, ref, onValue } from "firebase/database";
+import { onAuthStateChanged } from "firebase/auth";
+import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
+import { auth } from "../api/Firebase";
 
 const Home = () => {
   const [verifiedItemsCount, setverifiedItemsCount] = useState(0);
   const [deniedItemsCount, setdeniedItemsCount] = useState(0);
+  const [regNo, setRegNo] = useState(null);
 
-  const getverifiedItemsCount = (verifiedList, setCount) => {
+  const getverifiedItemsCount = (verifiedList, setCount, userRegNo) => {
     const db = getDatabase();
     const collectionRef = ref(db, verifiedList);
 
@@ -13,7 +17,7 @@ const Home = () => {
       collectionRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          // Initialize an object to store counts for each "Ocan David" entry
+          // Initialize an object to store counts for each logged in user entry
           const counts = {};
           var index = 0;
 
@@ -24,8 +28,8 @@ const Home = () => {
             for (const innerkey in item) {
               if (item.hasOwnProperty(innerkey)) {
                 const value = item[innerkey];
-                // Check if the payer is "Ocan David"
-                if (value.payer === "Ocan David") {
+                // Check if the payer's registration number matches with database
+                if (value.regNo === userRegNo) {
                   // Increment the count for each entry
                   index++;
                 }
@@ -57,7 +61,7 @@ const Home = () => {
     );
   };
 
-  const getdeniedItemsCount = (deniedList, setCount) => {
+  const getdeniedItemsCount = (deniedList, setCount, userRegNo) => {
     const db = getDatabase();
     const collectionRef = ref(db, deniedList);
 
@@ -65,21 +69,21 @@ const Home = () => {
       collectionRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          // Initialize an object to store counts for each "Ocan David" entry
+          // Initialize an object to store counts for each logged in user entry
           const counts = {};
-          var index = 0;
 
           // Loop through each entry in the snapshot
           Object.entries(snapshot.val()).forEach(([key, item]) => {
             // Initialize count for this entry if not already done
-
             for (const innerkey in item) {
               if (item.hasOwnProperty(innerkey)) {
                 const value = item[innerkey];
-                // Check if the payer is "Ocan David"
-                if (value.payer === "Daniel David") {
+
+                // Check if the payer's registration number matches with database
+                if (value.regNo === userRegNo) {
                   // Increment the count for each entry
-                  index++;
+                  var len = Object.keys(item).length;
+                  setdeniedItemsCount(len);
                 }
               }
             }
@@ -88,15 +92,6 @@ const Home = () => {
 
             // console.log(key);
           });
-
-          // Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
-          if (index > 0) {
-            console.log("User found. Count:", index);
-          } else {
-            console.log("User not found");
-          }
-
-          setdeniedItemsCount(index);
         } else {
           console.log("No data found for the collection");
           // Handle the case where no data is found
@@ -110,11 +105,39 @@ const Home = () => {
   };
 
   useEffect(() => {
-    getverifiedItemsCount("verifiedList", setverifiedItemsCount);
-  }, []);
+    getverifiedItemsCount("verifiedList", setverifiedItemsCount, regNo);
+  }, [regNo]);
 
   useEffect(() => {
-    getdeniedItemsCount("deniedList", setdeniedItemsCount);
+    getdeniedItemsCount("deniedList", setdeniedItemsCount, regNo);
+  }, [regNo]);
+
+  // Get user information upon sign in such as firstname last name etc
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(firestore, "users", userId);
+
+        try {
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const regNo = userData.regNo;
+            setRegNo(regNo);
+          } else {
+            console.error("User data not found");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      } else {
+        console.log("User is signed out");
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   return (

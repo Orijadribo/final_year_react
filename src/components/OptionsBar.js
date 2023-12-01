@@ -79,7 +79,7 @@ const OptionsBar = () => {
     });
   });
 
-  // Get user information such as firstname last name etc
+  // Get user information upon sign in such as firstname last name etc
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {

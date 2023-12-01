@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { database } from "../api/Firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
+import { auth } from "../api/Firebase";
 
 const History = () => {
   const [verifiedItems, setverifiedItems] = useState([]);
@@ -9,6 +12,9 @@ const History = () => {
   const [verifiedList, setverifiedList] = useState(false);
   const [deniedList, setdeniedList] = useState(false);
   const [lastFiveList, setLastFiveList] = useState(true);
+  const [regNo, setRegNo] = useState(null);
+  const [verifiedItemsToDisplay, setVerifiedItemsToDisplay] = useState(false);
+  const [deniedItemsToDisplay, setDeniedItemsToDisplay] = useState(false);
 
   const openVerifiedList = () => {
     if (!verifiedList) {
@@ -34,33 +40,45 @@ const History = () => {
     setdeniedList(false);
   };
 
+  //Fetching data for verified list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "verifiedList");
 
-      const unsubscribe = onValue(dbRef, (snapshot) => {
-        // Fetch data from the real time database
-        const data = snapshot.val();
+      const unsubscribe = onValue(
+        dbRef,
+        (snapshot) => {
+          // Fetch data from the real time database
+          const data = snapshot.val();
 
-        // Go over each of the entries in the denied list table
-        Object.entries(data).forEach(([key, item]) => {
-          // Iterate over each entry in the entries under denied list
-          // If entry exists, return a list as an id, item pair else return an empty list
-          const updatedItems = item
-            ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
-            : [];
-          // Then we move into the individual items inside the list
-          for (const innerkey in item) {
-            if (item.hasOwnProperty(innerkey)) {
-              const value = item[innerkey];
-              // Check if the payer is "Ocan David"
-              if (value.payer === "Ocan David") {
-                setverifiedItems(updatedItems);
+          if (data) {
+            // Go over each of the entries in the denied list table
+            Object.entries(data).forEach(([key, item]) => {
+              // Iterate over each entry in the entries under denied list
+              // If entry exists, return a list as an id, item pair else return an empty list
+              const updatedItems = item
+                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+                : [];
+              // Then we move into the individual items inside the list
+              for (const innerkey in item) {
+                if (item.hasOwnProperty(innerkey)) {
+                  const value = item[innerkey];
+                  // Check if the payer is "Ocan David"
+                  if (value.regNo === regNo) {
+                    setverifiedItems(updatedItems);
+                    setVerifiedItemsToDisplay(!verifiedItemsToDisplay);
+                  }
+                }
               }
-            }
+            });
           }
-        });
-      });
+        },
+        (error) => {
+          // Handle errors here
+          console.error("Error fetching data:", error);
+          // Display an error message to the user or perform other error handling steps
+        }
+      );
 
       return unsubscribe;
     };
@@ -68,40 +86,81 @@ const History = () => {
     const unsubscribe = fetchAndListenForUpdates();
 
     return () => unsubscribe();
-  }, []);
+  }, [regNo]);
+
+  //Fetching data for denied list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "deniedList");
 
-      const unsubscribe = onValue(dbRef, (snapshot) => {
-        // Fetch data from the real time database
-        const data = snapshot.val();
+      const unsubscribe = onValue(
+        dbRef,
+        (snapshot) => {
+          // Fetch data from the real time database
+          const data = snapshot.val();
 
-        // Go over each of the entries in the denied list table
-        Object.entries(data).forEach(([key, item]) => {
-          // Iterate over each entry in the entries under denied list
-          // If entry exists, return a list as an id item pair else return an empty list
-          const updatedItems = item
-            ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
-            : [];
+          if (data) {
+            // Go over each of the entries in the denied list table
+            Object.entries(data).forEach(([key, item]) => {
+              // Iterate over each entry in the entries under denied list
+              // If entry exists, return a list as an id item pair else return an empty list
+              const updatedItems = item
+                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+                : [];
 
-          // Then we move into the individual items inside the list
-          for (const innerkey in item) {
-            if (item.hasOwnProperty(innerkey)) {
-              const value = item[innerkey];
-              // Check if the payer is "Ocan David"
-              if (value.payer === "Ocan David") {
-                setdeniedItems(updatedItems);
+              // Then we move into the individual items inside the list
+              for (const innerkey in item) {
+                if (item.hasOwnProperty(innerkey)) {
+                  const value = item[innerkey];
+                  // Check if the payer is "Ocan David"
+                  if (value.regNo === regNo) {
+                    setdeniedItems(updatedItems);
+                    setDeniedItemsToDisplay(!deniedItemsToDisplay);
+                  }
+                }
               }
-            }
+            });
           }
-        });
-      });
+        },
+        (error) => {
+          // Handle errors here
+          console.error("Error fetching data:", error);
+          // Display an error message to the user or perform other error handling steps
+        }
+      );
 
       return unsubscribe;
     };
 
     const unsubscribe = fetchAndListenForUpdates();
+
+    return () => unsubscribe();
+  }, [regNo]);
+
+  // Get user information upon sign in such as firstname last name etc
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(firestore, "users", userId);
+
+        try {
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const regNo = userData.regNo;
+            setRegNo(regNo);
+          } else {
+            console.error("User data not found");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      } else {
+        console.log("User is signed out");
+      }
+    });
 
     return () => unsubscribe();
   }, []);
@@ -113,7 +172,7 @@ const History = () => {
       </div>
       <div className="py-5 w-full">
         {/* Buttons to show the history of transactions  */}
-        <div className="flex border-2 p-1 border-neutral-200 justify-between rounded-lg">
+        <div className="flex border-2 p-1 border-neutral-200 justify-between rounded-l">
           <button
             id="verifiedListBtn"
             className={`w-full p-2 hover:bg-[#565656] rounded-lg ${
@@ -121,7 +180,7 @@ const History = () => {
             }`}
             onClick={openLastFive}
           >
-            Last 5 Transactions
+            History of Transactions
           </button>
           <div className="border-2 border-neutral-200 rounded-full m-2"></div>
           <button
@@ -148,57 +207,67 @@ const History = () => {
         <div className="overflow-y-auto">
           <div className={`${verifiedList ? "" : "hidden"}`}>
             <h1 className="font-bold text-xl py-5">Verified Items</h1>
-
-            <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
-              {verifiedItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
-                >
-                  <div className="font-bold text-lg">{item.payer}</div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Amount: </p>
-                    <p>{item.amount}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Date:</p>
-                    <p>{item.date}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Registration No: </p>
-                    <p>{item.regNo}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            {verifiedItemsToDisplay ? (
+              <div>
+                <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
+                  {verifiedItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                    >
+                      <div className="font-bold text-lg">{item.payer}</div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Amount: </p>
+                        <p>{item.amount}</p>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Date:</p>
+                        <p>{item.date}</p>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Registration No: </p>
+                        <p>{item.regNo}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div>Nothing to show here</div>
+            )}
           </div>
 
           <div className={`${deniedList ? "" : "hidden"}`}>
             <h1 className="font-bold text-xl py-5">Denied Items</h1>
-
-            <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">
-              {deniedItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
-                >
-                  <div className="font-bold text-lg">{item.payer}</div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Amount: </p>
-                    <p>{item.amount}</p>
-                  </div>
-                  <div className="flex items-center justify-between py-1">
-                    <p>Date:</p>
-                    <p>{item.date}</p>
-                  </div>
-                  <div className="flex items-center justify-between pt-1">
-                    <p>Registration No: </p>
-                    <p>{item.regNo}</p>
-                  </div>
-                  {/* <hr className="w-full mt-5"></hr> */}
-                </li>
-              ))}
-            </ul>
+            {deniedItemsToDisplay ? (
+              <div>
+                <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">
+                  {deniedItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                    >
+                      <div className="font-bold text-lg">{item.payer}</div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Amount: </p>
+                        <p>{item.amount}</p>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Date:</p>
+                        <p>{item.date}</p>
+                      </div>
+                      <div className="flex items-center justify-between pt-1">
+                        <p>Registration No: </p>
+                        <p>{item.regNo}</p>
+                      </div>
+                      {/* <hr className="w-full mt-5"></hr> */}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div>Nothing to show here</div>
+            )}
           </div>
         </div>
       </div>
