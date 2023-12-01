@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { getDatabase, ref, get, push, serverTimestamp } from "firebase/database";
+import React, { useState } from "react";
+import { ref, push, serverTimestamp, get } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { database } from "../api/Firebase"; // Import the database instance
@@ -33,6 +33,7 @@ const Upload = () => {
     const date = document.getElementById("date").value;
     const regNo = document.getElementById("regNo").value;
     const payer = document.getElementById("payer").value;
+    const bankslipImage = document.getElementById("dropzone-file").value;
 
     const databaseData = await fetchDatabaseData();
 
@@ -46,14 +47,16 @@ const Upload = () => {
       );
 
       if (matchingRecord) {
-        console.log("Details match an existing record in the database.");
+        // console.log("Details match an existing record in the database.");
 
-        const verifiedListRef = ref(database, "verifiedList");
-        push(verifiedListRef, {
+        // Create a reference to the payer's folder in the verifiedList
+        const verifiedListPayerRef = ref(database, `verifiedList/${payer}`);
+        // Push data to the payer's folder in verifiedList
+        push(verifiedListPayerRef, {
           amount,
           date,
           regNo,
-          payer,
+          bankslipImage,
           timestamp: serverTimestamp(),
         });
 
@@ -61,14 +64,16 @@ const Upload = () => {
           position: toast.POSITION.TOP_CENTER,
         });
       } else {
-        console.log("Details do not match any existing records in the database.");
+        // console.log("Details do not match any existing records in the database.");
 
-        const deniedListRef = ref(database, "deniedList");
-        push(deniedListRef, {
+        // Create a reference to the payer's folder in the deniedList
+        const deniedListPayerRef = ref(database, `deniedList/${payer}`);
+        // Push data to the payer's folder in deniedList
+        push(deniedListPayerRef, {
           amount,
           date,
           regNo,
-          payer,
+          bankslipImage,
           timestamp: serverTimestamp(),
         });
 
