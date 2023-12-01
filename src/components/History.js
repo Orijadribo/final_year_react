@@ -147,13 +147,13 @@ const History = () => {
 
         <div className="overflow-y-auto">
           <div className={`${verifiedList ? "" : "hidden"}`}>
-            <h1 className="font-bold text-xl pt-10">Verified Items</h1>
+            <h1 className="font-bold text-xl py-5">Verified Items</h1>
 
             <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
               {verifiedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mt-5"
+                  className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
                 >
                   <div className="font-bold text-lg">{item.payer}</div>
                   <div className="flex items-center justify-between py-1">

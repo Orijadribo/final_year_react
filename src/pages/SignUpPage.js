@@ -1,7 +1,46 @@
-import React from "react";
 import { kiu_logo_2 } from "../assets";
+import React, { useState } from "react";
+import {
+  firestore,
+  auth,
+  createUserWithEmailAndPassword,
+  collection,
+  doc,
+  setDoc,
+} from "../api/FirebaseFirestone";
 
 const SignUpPage = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [regNo, setRegNo] = useState("");
+
+  const handleSignup = async () => {
+    try {
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+
+      // Store additional user information in Firestore
+      const userRef = doc(firestore, "users", user.uid);
+      await setDoc(userRef, {
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        regNo: regNo,
+      });
+
+      console.log("User signed up:", user);
+    } catch (error) {
+      console.error("Sign up error:", error.message);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center w-screen h-screen m-auto  bg-[#F4F6F9]">
       {/* Login form container */}
@@ -26,6 +65,8 @@ const SignUpPage = () => {
             type="email"
             placeholder="Enter your school email address"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           {/* Email input error message */}
@@ -38,6 +79,8 @@ const SignUpPage = () => {
             className="border rounded-lg p-2 mb-5"
             id="password"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <label className="pb-2" htmlFor="first_name">
             First Name
@@ -46,6 +89,8 @@ const SignUpPage = () => {
             className="border rounded-lg p-2 mb-5"
             id="first_name"
             type="text"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
           <label className="pb-2" htmlFor="last_name">
             Last Name
@@ -54,6 +99,8 @@ const SignUpPage = () => {
             className="border rounded-lg p-2 mb-5"
             id="last_name"
             type="text"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
           />
           <label className="pb-2" htmlFor="reg_no">
             Registration Number
@@ -62,6 +109,8 @@ const SignUpPage = () => {
             className="border rounded-lg p-2 mb-5"
             id="reg_no"
             type="text"
+            value={regNo}
+            onChange={(e) => setRegNo(e.target.value)}
           />
         </form>
 
@@ -91,6 +140,7 @@ const SignUpPage = () => {
           className="w-full rounded-lg py-2 bg-[#02B056]"
           type="button"
           id="loginButton"
+          onClick={handleSignup}
         >
           Register Now
         </button>
