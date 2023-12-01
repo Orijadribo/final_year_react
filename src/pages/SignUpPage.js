@@ -8,6 +8,9 @@ import {
   doc,
   setDoc,
 } from "../api/FirebaseFirestone";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignUpPage = () => {
   const [firstName, setFirstName] = useState("");
@@ -15,6 +18,8 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [regNo, setRegNo] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSignup = async () => {
     try {
@@ -35,7 +40,26 @@ const SignUpPage = () => {
         regNo: regNo,
       });
 
-      console.log("User signed up:", user);
+      // Drop a notification and navigate to login page upon signup 
+      toast.success("User created Successfully!", {
+        position: toast.POSITION.TOP_CENTER,
+        autoClose: 500,
+        // Styling the pop-up message
+        style: {
+          backgroundColor: "#02B056",
+          color: "#fff",
+          textAlign: "center",
+        },
+        icon: false,
+        // Remove the progress bar
+        hideProgressBar: true,
+        onClose: () => {
+          // Redirect to Home.js after the toast message is closed
+          navigate("/");
+        },
+      });
+
+      console.log("User signed up");
     } catch (error) {
       console.error("Sign up error:", error.message);
     }
@@ -151,6 +175,7 @@ const SignUpPage = () => {
           </span>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
