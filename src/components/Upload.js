@@ -28,15 +28,18 @@ const Upload = () => {
 
   const handleFormSubmission = async (event) => {
     event.preventDefault();
-
+  
     const amount = parseFloat(document.getElementById("amount").value);
     const date = document.getElementById("date").value;
     const regNo = document.getElementById("regNo").value;
     const payer = document.getElementById("payer").value;
     const bankslipImage = document.getElementById("dropzone-file").value;
-
+  
+    // Replace serverTimestamp() with Date.now()
+    const timestamp = Date.now();
+  
     const databaseData = await fetchDatabaseData();
-
+  
     if (databaseData) {
       const matchingRecord = Object.values(databaseData).find(
         (record) =>
@@ -45,46 +48,51 @@ const Upload = () => {
           record.regNo === regNo &&
           record.payer === payer
       );
-
+  
       if (matchingRecord) {
-        // console.log("Details match an existing record in the database.");
-
-        // Create a reference to the payer's folder in the verifiedList
         const verifiedListPayerRef = ref(database, `verifiedList/${payer}`);
-        // Push data to the payer's folder in verifiedList
         push(verifiedListPayerRef, {
           amount,
           date,
           regNo,
           bankslipImage,
-          timestamp: serverTimestamp(),
+          timestamp,
         });
-
+  
+        const notificationsRef = ref(database, `notifications/${payer}`);
+        push(notificationsRef, {
+          message: "Payment details submitted successfully. Thank you for your payment.",
+          timestamp,
+        });
+  
         toast.success("Verification Successful!", {
           position: toast.POSITION.TOP_CENTER,
         });
       } else {
-        // console.log("Details do not match any existing records in the database.");
-
-        // Create a reference to the payer's folder in the deniedList
         const deniedListPayerRef = ref(database, `deniedList/${payer}`);
-        // Push data to the payer's folder in deniedList
         push(deniedListPayerRef, {
           amount,
           date,
           regNo,
           bankslipImage,
-          timestamp: serverTimestamp(),
+          timestamp,
         });
-
+  
+        const notificationsRef = ref(database, `notifications/${payer}`);
+        push(notificationsRef, {
+          message: "Payment details denied. Please check the information and try again.",
+          timestamp,
+        });
+  
         toast.error("Verification Unsuccessful!", {
           position: toast.POSITION.TOP_CENTER,
         });
       }
     }
-
+  
     handleClearForm();
   };
+    
 
   const handleClearForm = () => {
     document.getElementById("uploadForm").reset();
