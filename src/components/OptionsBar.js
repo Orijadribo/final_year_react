@@ -149,13 +149,15 @@ const OptionsBar = () => {
             </div>
 
             {/* SignOut section */}
-            <div className="relative">
+            <div id="signout" className="relative">
               <div
                 onClick={toggleNavigation}
-                aria-expanded={isOpen}
-                className="cursor-pointer"
+                className={`cursor-pointer transition-transform duration-[500ms] transform rotate-${
+                  isOpen ? "0" : "180"
+                }`}
               >
-                {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+                {/* {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />} */}
+                <IoIosArrowUp />
               </div>
 
               <div

@@ -1,26 +1,87 @@
 import React, { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { database } from "../api/Firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
+import { auth } from "../api/Firebase";
 
 const Notifications = () => {
   const [items, setItems] = useState([]);
+  const [regNo, setRegNo] = useState(null);
 
+  //Fetching data for notifications
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "notifications");
 
-      const unsubscribe = onValue(dbRef, (snapshot) => {
-        const data = snapshot.val();
-        const updatedItems = data
-          ? Object.entries(data).map(([id, item]) => ({ id, ...item }))
-          : [];
-        setItems(updatedItems);
-      });
+      const unsubscribe = onValue(
+        dbRef,
+        (snapshot) => {
+          // Fetch data from the real time database
+          const data = snapshot.val();
+
+          if (data) {
+            // Go over each of the entries in the denied list table
+            Object.entries(data).forEach(([key, item]) => {
+              // Iterate over each entry in the entries under denied list
+              // If entry exists, return a list as an id, item pair else return an empty list
+              const updatedItems = item
+                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+                : [];
+              // Then we move into the individual items inside the list
+              for (const innerkey in item) {
+                if (item.hasOwnProperty(innerkey)) {
+                  const value = item[innerkey];
+                  console.log(updatedItems)
+                  console.log(value.message)
+                  setItems(updatedItems);
+                  // Check if the payer is "Ocan David"
+                  if (value.regNo === regNo) {
+                  }
+                }
+              }
+            });
+          }
+        },
+        (error) => {
+          // Handle errors here
+          console.error("Error fetching data:", error);
+          // Display an error message to the user or perform other error handling steps
+        }
+      );
 
       return unsubscribe;
     };
 
     const unsubscribe = fetchAndListenForUpdates();
+
+    return () => unsubscribe();
+  }, []);
+
+  // Get user information upon sign in such as firstname last name etc
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(firestore, "users", userId);
+
+        try {
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const regNo = userData.regNo;
+            setRegNo(regNo);
+          } else {
+            console.error("User data not found");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      } else {
+        console.log("User is signed out");
+      }
+    });
 
     return () => unsubscribe();
   }, []);

@@ -4,24 +4,28 @@ import { database } from "../api/Firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
 import { auth } from "../api/Firebase";
+import { IoIosCloseCircle } from "react-icons/io";
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import { FaHistory } from "react-icons/fa";
 
 const History = () => {
   const [verifiedItems, setverifiedItems] = useState([]);
   const [deniedItems, setdeniedItems] = useState([]);
-  const [lastFive, setLastFive] = useState([]);
+  const [history, setHistory] = useState([]);
   const [verifiedList, setverifiedList] = useState(false);
   const [deniedList, setdeniedList] = useState(false);
-  const [lastFiveList, setLastFiveList] = useState(true);
+  const [historyList, setHistoryList] = useState(true);
   const [regNo, setRegNo] = useState(null);
   const [verifiedItemsToDisplay, setVerifiedItemsToDisplay] = useState(false);
   const [deniedItemsToDisplay, setDeniedItemsToDisplay] = useState(false);
+  const [historyToDisplay, setHistoryToDisplay] = useState(false);
 
   const openVerifiedList = () => {
     if (!verifiedList) {
       setverifiedList(!verifiedList);
     }
     setdeniedList(false);
-    setLastFiveList(false);
+    setHistoryList(false);
   };
 
   const openDeniedList = () => {
@@ -29,12 +33,12 @@ const History = () => {
       setdeniedList(!deniedList);
     }
     setverifiedList(false);
-    setLastFiveList(false);
+    setHistoryList(false);
   };
 
-  const openLastFive = () => {
-    if (!lastFiveList) {
-      setLastFiveList(!lastFiveList);
+  const openhistory = () => {
+    if (!historyList) {
+      setHistoryList(!historyList);
     }
     setverifiedList(false);
     setdeniedList(false);
@@ -63,7 +67,7 @@ const History = () => {
               for (const innerkey in item) {
                 if (item.hasOwnProperty(innerkey)) {
                   const value = item[innerkey];
-                  // Check if the payer is "Ocan David"
+                  // Check if the payer the user logged in
                   if (value.regNo === regNo) {
                     setverifiedItems(updatedItems);
                     setVerifiedItemsToDisplay(!verifiedItemsToDisplay);
@@ -172,13 +176,13 @@ const History = () => {
       </div>
       <div className="py-5 w-full">
         {/* Buttons to show the history of transactions  */}
-        <div className="flex border-2 p-1 border-neutral-200 justify-between rounded-l">
+        <div className="flex p-1 bg-neutral-200 justify-between rounded-l">
           <button
             id="verifiedListBtn"
             className={`w-full p-2 hover:bg-[#565656] rounded-lg ${
-              lastFiveList ? "bg-[#565656]" : ""
+              historyList ? "bg-[#565656]" : ""
             }`}
-            onClick={openLastFive}
+            onClick={openhistory}
           >
             History of Transactions
           </button>
@@ -204,9 +208,28 @@ const History = () => {
           </button>
         </div>
 
+        {/* List of past transactions (all of them)  */}
+        <div className="overflow-y-auto">
+          <div className={`${historyList ? "" : "hidden"}`}>
+            <div className="flex items-center gap-5">
+              <h1 className="font-bold text-xl py-5">Your Past Transactions</h1>
+              <div className=" text-2xl">
+                <FaHistory />
+              </div>
+            </div>
+            {historyToDisplay ? "" : <div>Nothing to show here</div>}
+          </div>
+        </div>
+
+        {/* verified Items List  */}
         <div className="overflow-y-auto">
           <div className={`${verifiedList ? "" : "hidden"}`}>
-            <h1 className="font-bold text-xl py-5">Verified Items</h1>
+            <div className="flex items-center gap-5">
+              <h1 className="font-bold text-xl py-5">Verified Items</h1>
+              <div className="text-[#02B056] text-2xl">
+                <IoIosCheckmarkCircle />
+              </div>
+            </div>
             {verifiedItemsToDisplay ? (
               <div>
                 <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
@@ -237,8 +260,14 @@ const History = () => {
             )}
           </div>
 
+          {/* Declined Items List  */}
           <div className={`${deniedList ? "" : "hidden"}`}>
-            <h1 className="font-bold text-xl py-5">Denied Items</h1>
+            <div className="flex items-center gap-5">
+              <h1 className="font-bold text-xl py-5">Denied Items</h1>
+              <div className="text-[#b00202] text-2xl">
+                <IoIosCloseCircle />
+              </div>
+            </div>
             {deniedItemsToDisplay ? (
               <div>
                 <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">

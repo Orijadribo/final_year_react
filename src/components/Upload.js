@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ref, push, serverTimestamp, get } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { database } from "../api/Firebase"; // Import the database instance
+import { database } from "../api/Firebase";
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState();
