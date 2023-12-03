@@ -162,7 +162,7 @@ const OptionsBar = () => {
 
               <div
                 id="signOut"
-                className={`absolute bg-white shadow-sm rounded-md right-0 top-10 ${
+                className={`absolute bg-white shadow-xl rounded-md right-0 top-10 ${
                   isOpen ? "" : "hidden"
                 }`}
               >
