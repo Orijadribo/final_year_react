@@ -7,56 +7,64 @@ import { auth } from "../api/Firebase";
 
 const Notifications = () => {
   const [items, setItems] = useState([]);
-  const [regNo, setRegNo] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
 
   //Fetching data for notifications
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
-      const dbRef = ref(database, "notifications");
+      try {
+        const dbRef = ref(database, "notifications");
 
-      const unsubscribe = onValue(
-        dbRef,
-        (snapshot) => {
-          // Fetch data from the real time database
-          const data = snapshot.val();
+        const unsubscribe = onValue(
+          dbRef,
+          (snapshot) => {
+            // Fetch data from the real-time database
+            const data = snapshot.val();
 
-          if (data) {
-            // Go over each of the entries in the denied list table
-            Object.entries(data).forEach(([key, item]) => {
-              // Iterate over each entry in the entries under denied list
-              // If entry exists, return a list as an id, item pair else return an empty list
-              const updatedItems = item
-                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
-                : [];
-              // Then we move into the individual items inside the list
-              for (const innerkey in item) {
-                if (item.hasOwnProperty(innerkey)) {
-                  const value = item[innerkey];
-                  console.log(updatedItems)
-                  console.log(value.message)
-                  setItems(updatedItems);
-                  // Check if the payer is "Ocan David"
-                  if (value.regNo === regNo) {
-                  }
+            if (data) {
+              // Go over each of the entries in the denied list table
+              Object.entries(data).forEach(([key, item]) => {
+                // Iterate over each entry in the entries under the denied list
+                // If entry exists, return a list as an id, item pair else return an empty list
+
+                if (
+                  key === firstName + " " + lastName ||
+                  key === lastName + " " + firstName
+                ) {
+                  console.log("Match found:", key);
+
+                  const updatedItems = item
+                    ? Object.entries(item).map(([id, item]) => ({
+                        id,
+                        ...item,
+                      }))
+                    : [];
+
+                  // Set the state with the updated items
+                  setItems(updatedItems);                 
                 }
-              }
-            });
+              });
+            }
+          },
+          (error) => {
+            // Handle errors here
+            console.error("Error fetching data:", error);
+            // Display an error message to the user or perform other error handling steps
           }
-        },
-        (error) => {
-          // Handle errors here
-          console.error("Error fetching data:", error);
-          // Display an error message to the user or perform other error handling steps
-        }
-      );
+        );
 
-      return unsubscribe;
+        return () => unsubscribe();
+      } catch (error) {
+        // Handle errors here
+        console.error("Error fetching data:", error);
+      }
     };
 
     const unsubscribe = fetchAndListenForUpdates();
 
     return () => unsubscribe();
-  }, []);
+  }, [firstName, lastName]);
 
   // Get user information upon sign in such as firstname last name etc
   useEffect(() => {
@@ -70,8 +78,10 @@ const Notifications = () => {
 
           if (docSnap.exists()) {
             const userData = docSnap.data();
-            const regNo = userData.regNo;
-            setRegNo(regNo);
+            const firstName = userData.firstName;
+            const lastName = userData.lastName;
+            setFirstName(firstName);
+            setLastName(lastName);
           } else {
             console.error("User data not found");
           }
@@ -96,7 +106,7 @@ const Notifications = () => {
             className="flex flex-col items-start justify-center pt-5"
           >
             <p>{item.message}</p>
-            <p>{item.time}</p>
+            <p>{item.timestamp}</p>
             <hr className="w-full mt-5"></hr>
           </li>
         ))}

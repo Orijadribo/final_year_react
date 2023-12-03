@@ -152,8 +152,8 @@ const OptionsBar = () => {
             <div id="signout" className="relative">
               <div
                 onClick={toggleNavigation}
-                className={`cursor-pointer transition-transform duration-[500ms] transform rotate-${
-                  isOpen ? "0" : "180"
+                className={`cursor-pointer transition-transform duration-500 transform ${
+                  isOpen ? "rotate-0" : "rotate-180"
                 }`}
               >
                 {/* {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />} */}

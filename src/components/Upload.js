@@ -28,18 +28,18 @@ const Upload = () => {
 
   const handleFormSubmission = async (event) => {
     event.preventDefault();
-  
+
     const amount = parseFloat(document.getElementById("amount").value);
     const date = document.getElementById("date").value;
     const regNo = document.getElementById("regNo").value;
     const payer = document.getElementById("payer").value;
     const bankslipImage = document.getElementById("dropzone-file").value;
-  
+
     // Replace serverTimestamp() with Date.now()
     const timestamp = Date.now();
-  
+
     const databaseData = await fetchDatabaseData();
-  
+
     if (databaseData) {
       const matchingRecord = Object.values(databaseData).find(
         (record) =>
@@ -48,8 +48,9 @@ const Upload = () => {
           record.regNo === regNo &&
           record.payer === payer
       );
-  
+
       if (matchingRecord) {
+        // If the record matches what is from the bank, add the details to the verified list in the database on successfull verification
         const verifiedListPayerRef = ref(database, `verifiedList/${payer}`);
         push(verifiedListPayerRef, {
           amount,
@@ -58,17 +59,30 @@ const Upload = () => {
           bankslipImage,
           timestamp,
         });
-  
+
+        // If the record matches what is from the bank, generate a notification on successfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: "Payment details submitted successfully. Thank you for your payment.",
+          message: `Payment details of amount ${amount} paid on ${date} verified successfully. Thank you for your payment.`,
           timestamp,
         });
-  
+
+        // Provide an alert to the user upon verification
         toast.success("Verification Successful!", {
           position: toast.POSITION.TOP_CENTER,
+          // autoClose: 50,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "#02B056",
+            color: "#fff",
+            textAlign: "center",
+          },
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
         });
       } else {
+        // If the record matches what is from the bank, add the details to the verified list in the database on successfull verification
         const deniedListPayerRef = ref(database, `deniedList/${payer}`);
         push(deniedListPayerRef, {
           amount,
@@ -77,22 +91,33 @@ const Upload = () => {
           bankslipImage,
           timestamp,
         });
-  
+
+        // If the record matches what is from the bank, generate a notification on successfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: "Payment details denied. Please check the information and try again.",
+          message: `Payment details of amount ${amount} paid on ${date} denied. Please check the information and try again.`,
           timestamp,
         });
-  
+
+        // Provide an alert to the user upon verification
         toast.error("Verification Unsuccessful!", {
           position: toast.POSITION.TOP_CENTER,
+          // autoClose: 50,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "#b00202",
+            color: "#fff",
+            textAlign: "center",
+          },
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
         });
       }
     }
-  
+
     handleClearForm();
   };
-    
 
   const handleClearForm = () => {
     document.getElementById("uploadForm").reset();
@@ -102,6 +127,7 @@ const Upload = () => {
   return (
     <div id="upload" className="px-10 py-12 md:py-5 w-full">
       <h1 className="font-bold text-2xl">Upload Form</h1>
+      <p className="italic text-sm pt-2">(Ensure to enter the correct information)</p>
       <div className="py-10">
         <form
           action=""
