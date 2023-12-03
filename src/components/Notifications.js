@@ -9,6 +9,7 @@ const Notifications = () => {
   const [items, setItems] = useState([]);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
+  const [available, setAvailable] = useState(false);
 
   //Fetching data for notifications
   useEffect(() => {
@@ -42,7 +43,8 @@ const Notifications = () => {
                     : [];
 
                   // Set the state with the updated items
-                  setItems(updatedItems);                 
+                  setItems(updatedItems);
+                  setAvailable(!available);
                 }
               });
             }
@@ -99,18 +101,24 @@ const Notifications = () => {
   return (
     <div id="notifications" className="px-10 py-12 md:py-5 w-full">
       <h1 className="font-bold text-2xl font-body">Notifications</h1>
-      <ul className="py-5 w-full">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="flex flex-col items-start justify-center pt-5"
-          >
-            <p>{item.message}</p>
-            <p>{item.timestamp}</p>
-            <hr className="w-full mt-5"></hr>
-          </li>
-        ))}
-      </ul>
+      {available ? (
+        <div>
+          <ul className="py-5 w-full">
+            {items.map((item) => (
+              <li
+                key={item.id}
+                className="flex flex-col items-start justify-center pt-5"
+              >
+                <p>{item.message}</p>
+                <p>{item.timestamp}</p>
+                <hr className="w-full mt-5"></hr>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div className="py-5 w-full">There are no notifications for you</div>
+      )}
     </div>
   );
 };
