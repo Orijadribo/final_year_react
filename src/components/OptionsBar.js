@@ -143,7 +143,7 @@ const OptionsBar = () => {
                 </div>
               </div>
             </div>
-            <h1>{firstName ? firstName : ""}</h1>
+            <h1>{firstName ? "Hello.."+firstName+"!" : ""}</h1>
             <div className="flex items-center justify-center rounded-full border h-8 w-8">
               <img src={profile_pic} alt="Default Porfile pic" />
             </div>
