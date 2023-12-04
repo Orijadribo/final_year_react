@@ -36,7 +36,9 @@ const Upload = () => {
     const bankslipImage = document.getElementById("dropzone-file").value;
 
     // Replace serverTimestamp() with Date.now()
-    const timestamp = Date.now();
+    const timestampInSeconds = Date.now() / 1000; // Convert milliseconds to seconds
+    const timestamp = new Date(timestampInSeconds * 1000); // Convert back to milliseconds for Date object
+
 
     const databaseData = await fetchDatabaseData();
 
@@ -63,7 +65,8 @@ const Upload = () => {
         // If the record matches what is from the bank, generate a notification on successfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: `Payment details of amount ${amount} paid on ${date} verified successfully. Thank you for your payment.`,
+          message: `Payment details of amount ${amount} paid on ${timestamp.toLocaleString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })} verified successfully. Thank you for your payment.`,
+
           timestamp,
         });
 
@@ -95,7 +98,8 @@ const Upload = () => {
         // If the record matches what is from the bank, generate a notification on successfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: `Payment details of amount ${amount} paid on ${date} denied. Please check the information and try again.`,
+          message: `Payment details of amount ${amount} paid on ${timestamp.toLocaleString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })} denied. Please check the information and try again.`,
+
           timestamp,
         });
 
