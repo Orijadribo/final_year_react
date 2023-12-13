@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ref, push, serverTimestamp, get } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { database } from "../api/Firebase";
+import { auth } from "../api/Firebase";
+import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
+import { onAuthStateChanged } from "firebase/auth";
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState();
   const [isFilePicked, setIsFilePicked] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+  const [regNo, setRegNo] = useState(null);
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -124,10 +131,44 @@ const Upload = () => {
     setSelectedFile();
   };
 
+  // Get user information upon sign in such as firstname last name etc
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userId = user.uid;
+        const userRef = doc(firestore, "users", userId);
+
+        try {
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            const firstName = userData.firstName;
+            const lastName = userData.lastName;
+            const regNo = userData.regNo;
+            setFirstName(firstName);
+            setLastName(lastName);
+            setRegNo(regNo);
+          } else {
+            console.error("User data not found");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error.message);
+        }
+      } else {
+        console.log("User is signed out");
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div id="upload" className="px-10 py-12 md:py-5 w-full">
       <h1 className="font-bold text-2xl">Upload Form</h1>
-      <p className="italic text-sm pt-2">(Ensure to enter the correct information)</p>
+      <p className="italic text-sm pt-2">
+        (Ensure to enter the correct information)
+      </p>
       <div className="py-10">
         <form
           action=""
@@ -165,7 +206,9 @@ const Upload = () => {
             name="regNo"
             id="regNo"
             className="border p-2 px-2 mb-5 rounded-md"
+            value={regNo}
             required
+            readOnly
           />
 
           <label htmlFor="payer" className="pb-2">
@@ -176,7 +219,9 @@ const Upload = () => {
             name="payer"
             id="payer"
             className="border p-2 px-2 mb-5 rounded-md"
+            value={lastName + " " + firstName}
             required
+            readOnly
           />
 
           <div className="flex items-center justify-center">
