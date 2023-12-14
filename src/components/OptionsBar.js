@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaBell } from "react-icons/fa";
 import { CiSearch } from "react-icons/ci";
-import { IoIosArrowDown } from "react-icons/io";
+import { FaBars } from "react-icons/fa6";
+import { IoMdClose } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { profile_pic } from "../assets";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,11 +21,16 @@ const OptionsBar = () => {
   const [lastName, setLastName] = useState(null);
   const [regNo, setRegNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [sideBar, setSideBar] = useState(false)
   const navigate = useNavigate();
 
   const toggleNavigation = () => {
     setIsOpen(!isOpen);
   };
+
+  const openSideBar = ()=>{
+    setSideBar(!sideBar);
+  }
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -112,13 +118,16 @@ const OptionsBar = () => {
   }, []); // Empty dependency array to run the effect only once on mount
 
   return (
-    <div className="w-[95%] hidden md:block sticky z-50 top-0 right-0">
+    <div className="w-[95%] sticky z-50 top-0 right-0">
       {/* User Information and shortcuts bar */}
-      <div className="">
+            <div className="">
         <div className="flex flex-row items-center justify-between gap-4 bg-white px-4 py-2 rounded-xl shadow-sm w-full">
           {/* Search */}
-          <div className="flex items-center justify-start py-1 w-full">
-            <div className="">
+          <div className="flex items-center justify-start py-1 w-1/2">
+            <div className="md:hidden pr-2" onClick={openSideBar}>
+              {sideBar ? <IoMdClose /> : <FaBars />}
+            </div>
+            <div className="hidden md:block">
               <CiSearch />
             </div>
             <input
@@ -130,7 +139,7 @@ const OptionsBar = () => {
             />
           </div>
           <div className="flex flex-row items-center justify-center gap-4">
-            <div className="px-5">
+            <div className="px-5 hidden md:block">
               <div className="flex flex-row items-center relative justify-center px-1 gap-5">
                 <div className="cursor-pointer">
                   <VscFeedback />
@@ -143,7 +152,9 @@ const OptionsBar = () => {
                 </div>
               </div>
             </div>
-            <h1>{firstName ? "Hello.."+firstName+"!" : ""}</h1>
+            <h1 className="hidden md:block">
+              {firstName ? "Hello " + firstName + "!" : ""}
+            </h1>
             <div className="flex items-center justify-center rounded-full border h-8 w-8">
               <img src={profile_pic} alt="Default Porfile pic" />
             </div>
