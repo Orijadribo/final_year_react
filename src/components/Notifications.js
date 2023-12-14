@@ -104,16 +104,19 @@ const Notifications = () => {
       {available ? (
         <div>
           <ul className="py-5 w-full">
-            {items.map((item) => (
-              <li
-                key={item.id}
-                className="flex flex-col items-start justify-center pt-5"
-              >
-                <p>{item.message}</p>
-                <p>{item.timestamp}</p>
-                <hr className="w-full mt-5"></hr>
-              </li>
-            ))}
+            {items
+              .slice()
+              .reverse()
+              .map((item) => (
+                <li
+                  key={item.id}
+                  className="flex flex-col items-start justify-center pt-5"
+                >
+                  <p>{item.message}</p>
+                  <p className="italic text-gray-500">{item.timestamp}</p>
+                  <hr className="w-full mt-5"></hr>
+                </li>
+              ))}
           </ul>
         </div>
       ) : (

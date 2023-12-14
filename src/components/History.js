@@ -152,7 +152,7 @@ const History = () => {
 
   // Combine and sort both verified and denied items
   const allItems = [...verifiedItems, ...deniedItems];
-  console.log(allItems)
+  // console.log(allItems)
   const sortedItems = allItems.sort(sortByDateDesc);
 
   return (
@@ -241,21 +241,24 @@ const History = () => {
             {verifiedItems.length > 0 ? (
               <div>
                 <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
-                  {verifiedItems.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
-                    >
-                      <div className="flex items-center justify-between py-1">
-                        <p>Amount: </p>
-                        <p>{item.amount}</p>
-                      </div>
-                      <div className="flex items-center justify-between py-1">
-                        <p>Date:</p>
-                        <p>{item.date}</p>
-                      </div>
-                    </li>
-                  ))}
+                  {verifiedItems
+                    .slice()
+                    .reverse()
+                    .map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                      >
+                        <div className="flex items-center justify-between py-1">
+                          <p>Amount: </p>
+                          <p>{item.amount}</p>
+                        </div>
+                        <div className="flex items-center justify-between py-1">
+                          <p>Date:</p>
+                          <p>{item.date}</p>
+                        </div>
+                      </li>
+                    ))}
                 </ul>
               </div>
             ) : (
@@ -274,21 +277,24 @@ const History = () => {
             {deniedItems.length > 0 ? (
               <div>
                 <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">
-                  {deniedItems.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
-                    >
-                      <div className="flex items-center justify-between py-1">
-                        <p>Amount: </p>
-                        <p>{item.amount}</p>
-                      </div>
-                      <div className="flex items-center justify-between py-1">
-                        <p>Date:</p>
-                        <p>{item.date}</p>
-                      </div>
-                    </li>
-                  ))}
+                  {deniedItems
+                    .slice()
+                    .reverse()
+                    .map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                      >
+                        <div className="flex items-center justify-between py-1">
+                          <p>Amount: </p>
+                          <p>{item.amount}</p>
+                        </div>
+                        <div className="flex items-center justify-between py-1">
+                          <p>Date:</p>
+                          <p>{item.date}</p>
+                        </div>
+                      </li>
+                    ))}
                 </ul>
               </div>
             ) : (

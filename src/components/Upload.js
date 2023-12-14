@@ -72,9 +72,16 @@ const Upload = () => {
         // If the record matches what is from the bank, generate a notification on successfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: `Payment details of amount ${amount} paid on ${timestamp.toLocaleString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })} verified successfully. Thank you for your payment.`,
+          message: `Payment details of amount ${amount} paid on ${date} verified successfully. Thank you for your payment.`,
 
-          timestamp,
+          timestamp: `${timestamp.toLocaleString("en-US", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}`,
         });
 
         // Provide an alert to the user upon verification
@@ -92,7 +99,7 @@ const Upload = () => {
           hideProgressBar: true,
         });
       } else {
-        // If the record matches what is from the bank, add the details to the verified list in the database on successfull verification
+        // If the record does not match what is from the bank, add the details to the denied list in the database on unsuccessfull verification
         const deniedListPayerRef = ref(database, `deniedList/${payer}`);
         push(deniedListPayerRef, {
           amount,
@@ -102,15 +109,22 @@ const Upload = () => {
           timestamp,
         });
 
-        // If the record matches what is from the bank, generate a notification on successfull verification
+        // If the record does not match what is from the bank, generate a notification on unsuccessfull verification
         const notificationsRef = ref(database, `notifications/${payer}`);
         push(notificationsRef, {
-          message: `Payment details of amount ${amount} paid on ${timestamp.toLocaleString("en-US", { day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true })} denied. Please check the information and try again.`,
+          message: `Payment details of amount ${amount} paid on ${date} denied. Please check the information and try again.`,
 
-          timestamp,
+          timestamp: `${timestamp.toLocaleString("en-US", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            hour12: true,
+          })}`,
         });
 
-        // Provide an alert to the user upon verification
+        // Provide an alert to the user upon unsuccessful verification
         toast.error("Verification Unsuccessful!", {
           position: toast.POSITION.TOP_CENTER,
           // autoClose: 50,
