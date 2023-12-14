@@ -15,22 +15,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
 
-const OptionsBar = () => {
+const OptionsBar = ({ openSideBar, sideBar }) => {
   const [authUser, setAuthUser] = useState(null);
   const [firstName, setFirstName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [regNo, setRegNo] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [sideBar, setSideBar] = useState(false)
   const navigate = useNavigate();
 
   const toggleNavigation = () => {
     setIsOpen(!isOpen);
   };
-
-  const openSideBar = ()=>{
-    setSideBar(!sideBar);
-  }
 
   useEffect(() => {
     const handleDocumentClick = (e) => {
@@ -120,7 +115,7 @@ const OptionsBar = () => {
   return (
     <div className="w-[95%] sticky z-50 top-0 right-0">
       {/* User Information and shortcuts bar */}
-            <div className="">
+      <div className="">
         <div className="flex flex-row items-center justify-between gap-4 bg-white px-4 py-2 rounded-xl shadow-sm w-full">
           {/* Search */}
           <div className="flex items-center justify-start py-1 w-1/2">

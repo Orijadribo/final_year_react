@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { PiStudent } from "react-icons/pi";
 import { FaHome } from "react-icons/fa";
 import { FaUpload } from "react-icons/fa6";
@@ -7,7 +7,7 @@ import { IoNotifications } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
-const StudentSideBar = ({setSelectedSection}) => {
+const StudentSideBar = ({ sideBar, setSelectedSection }) => {
   // const [selectedSection, setSelectedSection] = useState("home");
   const navigate = useNavigate();
 
@@ -26,9 +26,11 @@ const StudentSideBar = ({setSelectedSection}) => {
     <div className="font-bodyFont">
       <div
         id="sideBar"
-        className="md:w-[30%] lg:w-[25%] h-full bg-white hidden md:block shadow-2xl top-0 left-0 fixed"
+        className={`md:w-[30%] lg:w-[25%] h-full bg-white shadow-2xl top-24 md:top-0 left-0 fixed rounded-tr-3xl ${
+          sideBar ? "block" : "hidden"
+        }`}
       >
-        <div className="flex gap-2 p-8 pt-20 md:p-8 items-center justify-center">
+        <div className="flex gap-2 p-8 md:pt-20 md:p-8 items-center justify-center">
           <div className="p-1 flex items-center">
             <PiStudent className="w-10 h-10 text-[#02b056]" />
           </div>
@@ -38,7 +40,7 @@ const StudentSideBar = ({setSelectedSection}) => {
         {/* Sidebar navigation menu */}
 
         <div className="flex flex-col items-center">
-          <ul className="pt-5 lg:pl-10 w-full">
+          <ul className="md:pt-5 lg:pl-10 w-full">
             <Link to="home">
               <li
                 onClick={() => handleSectionChange("home")}
