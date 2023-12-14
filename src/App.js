@@ -8,7 +8,7 @@ import SignUpPage from "./pages/SignUpPage";
 function App() {
   return (
     <Router>
-      <div className="font-bodyFont">
+      <div className="font-bodyFont bg-[#F4F6F9]">
         <Routes>
           <Route path="/" element={<LoginForm />} />
           <Route path="/registration" element={<SignUpPage />} />

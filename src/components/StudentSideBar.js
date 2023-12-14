@@ -26,7 +26,7 @@ const StudentSideBar = ({ sideBar, setSelectedSection }) => {
     <div className="font-bodyFont">
       <div
         id="sideBar"
-        className={`md:w-[30%] lg:w-[25%] h-full bg-white shadow-2xl top-24 md:top-0 left-0 fixed rounded-tr-3xl ${
+        className={`md:w-[30%] lg:w-[25%] h-full bg-white shadow-2xl top-24 md:top-0 left-0 fixed rounded-tr-3xl md:block ${
           sideBar ? "block" : "hidden"
         }`}
       >
