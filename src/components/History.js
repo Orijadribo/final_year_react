@@ -165,7 +165,7 @@ const History = () => {
         <div className="flex p-1 bg-neutral-200 justify-between rounded-l">
           <button
             id="verifiedListBtn"
-            className={`w-full p-2 hover:bg-[#565656] rounded-lg ${
+            className={`w-full p-2 hover:bg-[#565656]/[0.5] rounded-lg ${
               historyToDisplay ? "bg-[#565656]" : ""
             }`}
             onClick={openHistory}
@@ -175,7 +175,7 @@ const History = () => {
           <div className="border-2 border-neutral-200 rounded-full m-2"></div>
           <button
             id="verifiedListBtn"
-            className={`w-full p-2 hover:bg-[#02B056] rounded-lg ${
+            className={`w-full p-2 hover:bg-[#02B056]/[0.5] rounded-lg ${
               verifiedItemsToDisplay ? "bg-[#02B056]" : ""
             }`}
             onClick={openVerifiedList}
@@ -185,7 +185,7 @@ const History = () => {
           <div className="border-2 border-neutral-200 rounded-full m-2"></div>
           <button
             id="deniedListBtn"
-            className={`w-full p-2 hover:bg-[#b00202] rounded-lg ${
+            className={`w-full p-2 hover:bg-[#b00202]/[0.5] rounded-lg ${
               deniedItemsToDisplay ? "bg-[#b00202]" : ""
             }`}
             onClick={openDeniedList}
@@ -247,7 +247,7 @@ const History = () => {
                     .map((item) => (
                       <li
                         key={item.id}
-                        className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                        className="flex flex-col justify-center p-5 w-full bg-[#02B056]/[0.1] rounded-2xl shadow-lg mb-5"
                       >
                         <div className="flex items-center justify-between py-1">
                           <p>Amount: </p>
@@ -283,7 +283,7 @@ const History = () => {
                     .map((item) => (
                       <li
                         key={item.id}
-                        className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                        className="flex flex-col justify-center p-5 w-full bg-[#b00202]/[0.1] rounded-2xl shadow-lg mb-5"
                       >
                         <div className="flex items-center justify-between py-1">
                           <p>Amount: </p>
