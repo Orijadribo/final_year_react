@@ -30,7 +30,7 @@ const StudentSideBar = ({ sideBar, setSelectedSection }) => {
           sideBar ? "block" : "hidden"
         }`}
       >
-        <div className="flex gap-2 p-8 md:pt-20 md:p-8 items-center justify-center">
+        <div className="flex gap-2 p-8 md:p-8 items-center justify-center">
           <div className="p-1 flex items-center">
             <PiStudent className="w-10 h-10 text-[#02b056]" />
           </div>

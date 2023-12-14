@@ -9,42 +9,40 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { FaHistory } from "react-icons/fa";
 
 const History = () => {
-  const [verifiedItems, setverifiedItems] = useState([]);
-  const [deniedItems, setdeniedItems] = useState([]);
-  const [history, setHistory] = useState([]);
-  const [verifiedList, setverifiedList] = useState(false);
-  const [deniedList, setdeniedList] = useState(false);
-  const [historyList, setHistoryList] = useState(true);
+  const [verifiedItems, setVerifiedItems] = useState([]);
+  const [deniedItems, setDeniedItems] = useState([]);
   const [regNo, setRegNo] = useState(null);
   const [verifiedItemsToDisplay, setVerifiedItemsToDisplay] = useState(false);
   const [deniedItemsToDisplay, setDeniedItemsToDisplay] = useState(false);
-  const [historyToDisplay, setHistoryToDisplay] = useState(false);
+  const [historyToDisplay, setHistoryToDisplay] = useState(true);
+
+  const sortByDateDesc = (a, b) => new Date(b.date) - new Date(a.date);
 
   const openVerifiedList = () => {
-    if (!verifiedList) {
-      setverifiedList(!verifiedList);
+    if (!verifiedItemsToDisplay) {
+      setVerifiedItemsToDisplay(true);
+      setDeniedItemsToDisplay(false);
+      setHistoryToDisplay(false);
     }
-    setdeniedList(false);
-    setHistoryList(false);
   };
 
   const openDeniedList = () => {
-    if (!deniedList) {
-      setdeniedList(!deniedList);
+    if (!deniedItemsToDisplay) {
+      setDeniedItemsToDisplay(true);
+      setVerifiedItemsToDisplay(false);
+      setHistoryToDisplay(false);
     }
-    setverifiedList(false);
-    setHistoryList(false);
   };
 
-  const openhistory = () => {
-    if (!historyList) {
-      setHistoryList(!historyList);
+  const openHistory = () => {
+    if (!historyToDisplay) {
+      setHistoryToDisplay(true);
+      setVerifiedItemsToDisplay(false);
+      setDeniedItemsToDisplay(false);
     }
-    setverifiedList(false);
-    setdeniedList(false);
   };
 
-  //Fetching data for verified list
+  // Fetching data for verified list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "verifiedList");
@@ -52,25 +50,19 @@ const History = () => {
       const unsubscribe = onValue(
         dbRef,
         (snapshot) => {
-          // Fetch data from the real time database
           const data = snapshot.val();
 
           if (data) {
-            // Go over each of the entries in the denied list table
             Object.entries(data).forEach(([key, item]) => {
-              // Iterate over each entry in the entries under denied list
-              // If entry exists, return a list as an id, item pair else return an empty list
               const updatedItems = item
                 ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
                 : [];
-              // Then we move into the individual items inside the list
+
               for (const innerkey in item) {
                 if (item.hasOwnProperty(innerkey)) {
                   const value = item[innerkey];
-                  // Check if the payer the user logged in
                   if (value.regNo === regNo) {
-                    setverifiedItems(updatedItems);
-                    setVerifiedItemsToDisplay(!verifiedItemsToDisplay);
+                    setVerifiedItems(updatedItems);
                   }
                 }
               }
@@ -78,9 +70,7 @@ const History = () => {
           }
         },
         (error) => {
-          // Handle errors here
           console.error("Error fetching data:", error);
-          // Display an error message to the user or perform other error handling steps
         }
       );
 
@@ -92,7 +82,7 @@ const History = () => {
     return () => unsubscribe();
   }, [regNo]);
 
-  //Fetching data for denied list
+  // Fetching data for denied list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "deniedList");
@@ -100,26 +90,19 @@ const History = () => {
       const unsubscribe = onValue(
         dbRef,
         (snapshot) => {
-          // Fetch data from the real time database
           const data = snapshot.val();
 
           if (data) {
-            // Go over each of the entries in the denied list table
             Object.entries(data).forEach(([key, item]) => {
-              // Iterate over each entry in the entries under denied list
-              // If entry exists, return a list as an id item pair else return an empty list
               const updatedItems = item
                 ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
                 : [];
 
-              // Then we move into the individual items inside the list
               for (const innerkey in item) {
                 if (item.hasOwnProperty(innerkey)) {
                   const value = item[innerkey];
-                  // Check if the payer is "Ocan David"
                   if (value.regNo === regNo) {
-                    setdeniedItems(updatedItems);
-                    setDeniedItemsToDisplay(!deniedItemsToDisplay);
+                    setDeniedItems(updatedItems);
                   }
                 }
               }
@@ -127,9 +110,7 @@ const History = () => {
           }
         },
         (error) => {
-          // Handle errors here
           console.error("Error fetching data:", error);
-          // Display an error message to the user or perform other error handling steps
         }
       );
 
@@ -169,6 +150,11 @@ const History = () => {
     return () => unsubscribe();
   }, []);
 
+  // Combine and sort both verified and denied items
+  const allItems = [...verifiedItems, ...deniedItems];
+  console.log(allItems)
+  const sortedItems = allItems.sort(sortByDateDesc);
+
   return (
     <div id="transactions" className="px-10 py-12 md:py-5 w-full">
       <div className="">
@@ -180,9 +166,9 @@ const History = () => {
           <button
             id="verifiedListBtn"
             className={`w-full p-2 hover:bg-[#565656] rounded-lg ${
-              historyList ? "bg-[#565656]" : ""
+              historyToDisplay ? "bg-[#565656]" : ""
             }`}
-            onClick={openhistory}
+            onClick={openHistory}
           >
             History of Transactions
           </button>
@@ -190,7 +176,7 @@ const History = () => {
           <button
             id="verifiedListBtn"
             className={`w-full p-2 hover:bg-[#02B056] rounded-lg ${
-              verifiedList ? "bg-[#02B056]" : ""
+              verifiedItemsToDisplay ? "bg-[#02B056]" : ""
             }`}
             onClick={openVerifiedList}
           >
@@ -200,7 +186,7 @@ const History = () => {
           <button
             id="deniedListBtn"
             className={`w-full p-2 hover:bg-[#b00202] rounded-lg ${
-              deniedList ? "bg-[#b00202]" : ""
+              deniedItemsToDisplay ? "bg-[#b00202]" : ""
             }`}
             onClick={openDeniedList}
           >
@@ -210,35 +196,21 @@ const History = () => {
 
         {/* List of past transactions (all of them)  */}
         <div className="overflow-y-auto">
-          <div className={`${historyList ? "" : "hidden"}`}>
+          <div className={`${historyToDisplay ? "" : "hidden"}`}>
             <div className="flex items-center gap-5">
               <h1 className="font-bold text-xl py-5">Your Past Transactions</h1>
               <div className=" text-2xl">
                 <FaHistory />
               </div>
             </div>
-            {historyToDisplay ? "" : <div>Nothing to show here</div>}
-          </div>
-        </div>
-
-        {/* verified Items List  */}
-        <div className="overflow-y-auto">
-          <div className={`${verifiedList ? "" : "hidden"}`}>
-            <div className="flex items-center gap-5">
-              <h1 className="font-bold text-xl py-5">Verified Items</h1>
-              <div className="text-[#02B056] text-2xl">
-                <IoIosCheckmarkCircle />
-              </div>
-            </div>
-            {verifiedItemsToDisplay ? (
+            {sortedItems.length > 0 ? (
               <div>
                 <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
-                  {verifiedItems.map((item) => (
+                  {sortedItems.map((item) => (
                     <li
                       key={item.id}
                       className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
                     >
-                      <div className="font-bold text-lg">{item.payer}</div>
                       <div className="flex items-center justify-between py-1">
                         <p>Amount: </p>
                         <p>{item.amount}</p>
@@ -247,9 +219,40 @@ const History = () => {
                         <p>Date:</p>
                         <p>{item.date}</p>
                       </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div>Nothing to show here</div>
+            )}
+          </div>
+        </div>
+
+        {/* verified Items List  */}
+        <div className="overflow-y-auto">
+          <div className={`${verifiedItemsToDisplay ? "" : "hidden"}`}>
+            <div className="flex items-center gap-5">
+              <h1 className="font-bold text-xl py-5">Verified Items</h1>
+              <div className="text-[#02B056] text-2xl">
+                <IoIosCheckmarkCircle />
+              </div>
+            </div>
+            {verifiedItems.length > 0 ? (
+              <div>
+                <ul className="w-full max-h-[350px] overflow-y-auto rounded-2xl">
+                  {verifiedItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                    >
                       <div className="flex items-center justify-between py-1">
-                        <p>Registration No: </p>
-                        <p>{item.regNo}</p>
+                        <p>Amount: </p>
+                        <p>{item.amount}</p>
+                      </div>
+                      <div className="flex items-center justify-between py-1">
+                        <p>Date:</p>
+                        <p>{item.date}</p>
                       </div>
                     </li>
                   ))}
@@ -261,14 +264,14 @@ const History = () => {
           </div>
 
           {/* Declined Items List  */}
-          <div className={`${deniedList ? "" : "hidden"}`}>
+          <div className={`${deniedItemsToDisplay ? "" : "hidden"}`}>
             <div className="flex items-center gap-5">
               <h1 className="font-bold text-xl py-5">Denied Items</h1>
               <div className="text-[#b00202] text-2xl">
                 <IoIosCloseCircle />
               </div>
             </div>
-            {deniedItemsToDisplay ? (
+            {deniedItems.length > 0 ? (
               <div>
                 <ul className="w-full md:max-h-[550px] overflow-y-auto rounded-2xl">
                   {deniedItems.map((item) => (
@@ -276,7 +279,6 @@ const History = () => {
                       key={item.id}
                       className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
                     >
-                      <div className="font-bold text-lg">{item.payer}</div>
                       <div className="flex items-center justify-between py-1">
                         <p>Amount: </p>
                         <p>{item.amount}</p>
@@ -285,11 +287,6 @@ const History = () => {
                         <p>Date:</p>
                         <p>{item.date}</p>
                       </div>
-                      <div className="flex items-center justify-between pt-1">
-                        <p>Registration No: </p>
-                        <p>{item.regNo}</p>
-                      </div>
-                      {/* <hr className="w-full mt-5"></hr> */}
                     </li>
                   ))}
                 </ul>
