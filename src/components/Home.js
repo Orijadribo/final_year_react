@@ -3,11 +3,19 @@ import { getDatabase, ref, onValue } from "firebase/database";
 import { onAuthStateChanged } from "firebase/auth";
 import { firestore, doc, getDoc } from "../api/FirebaseFirestone";
 import { auth } from "../api/Firebase";
+import { database } from "../api/Firebase";
+import { FaHistory } from "react-icons/fa";
 
 const Home = () => {
   const [verifiedItemsCount, setverifiedItemsCount] = useState(0);
   const [deniedItemsCount, setdeniedItemsCount] = useState(0);
   const [regNo, setRegNo] = useState(null);
+
+  const [verifiedItems, setVerifiedItems] = useState([]);
+  const [deniedItems, setDeniedItems] = useState([]);
+  const [historyToDisplay, setHistoryToDisplay] = useState(true);
+
+  const sortByDateDesc = (a, b) => new Date(b.date) - new Date(a.date);
 
   const getverifiedItemsCount = (verifiedList, setCount, userRegNo) => {
     const db = getDatabase();
@@ -140,6 +148,91 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
+  // Fetching data for verified list
+  useEffect(() => {
+    const fetchAndListenForUpdates = () => {
+      const dbRef = ref(database, "verifiedList");
+
+      const unsubscribe = onValue(
+        dbRef,
+        (snapshot) => {
+          const data = snapshot.val();
+
+          if (data) {
+            Object.entries(data).forEach(([key, item]) => {
+              const updatedItems = item
+                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+                : [];
+
+              for (const innerkey in item) {
+                if (item.hasOwnProperty(innerkey)) {
+                  const value = item[innerkey];
+                  if (value.regNo === regNo) {
+                    setVerifiedItems(updatedItems);
+                  }
+                }
+              }
+            });
+          }
+        },
+        (error) => {
+          console.error("Error fetching data:", error);
+        }
+      );
+
+      return unsubscribe;
+    };
+
+    const unsubscribe = fetchAndListenForUpdates();
+
+    return () => unsubscribe();
+  }, [regNo]);
+
+  // Fetching data for denied list
+  useEffect(() => {
+    const fetchAndListenForUpdates = () => {
+      const dbRef = ref(database, "deniedList");
+
+      const unsubscribe = onValue(
+        dbRef,
+        (snapshot) => {
+          const data = snapshot.val();
+
+          if (data) {
+            Object.entries(data).forEach(([key, item]) => {
+              const updatedItems = item
+                ? Object.entries(item).map(([id, item]) => ({ id, ...item }))
+                : [];
+
+              for (const innerkey in item) {
+                if (item.hasOwnProperty(innerkey)) {
+                  const value = item[innerkey];
+                  if (value.regNo === regNo) {
+                    setDeniedItems(updatedItems);
+                  }
+                }
+              }
+            });
+          }
+        },
+        (error) => {
+          console.error("Error fetching data:", error);
+        }
+      );
+
+      return unsubscribe;
+    };
+
+    const unsubscribe = fetchAndListenForUpdates();
+
+    return () => unsubscribe();
+  }, [regNo]);
+
+  // Combine and sort both verified and denied items
+  const allItems = [...verifiedItems, ...deniedItems];
+  // console.log(allItems);
+  const sortedItems = allItems.sort(sortByDateDesc);
+
   return (
     <div id="home" className="px-10 py-12 md:py-5 w-full">
       <div className="flex items-center justify-between">
@@ -183,101 +276,38 @@ const Home = () => {
         </div>
         <hr className="w-full m-10" />
         <div className="w-full">
-          <h1 className="font-extrabold py-2">Pending Verification requests</h1>
-          <p>
-            List of pending verification requests with basic transaction details
-          </p>
-          <div className="py-5">
-            <div className="flex justify-between py-5">
-              <div className="flex flex-col items-center justify-center">
-                <h3 className="font-bold">Transaction 1</h3>
-                <p>Amount $100</p>
-              </div>
-              <div className="flex flex-col items-center justify-center pr-5">
-                <h3 className="font-bold">Status</h3>
-                <div className="p-2">
-                  <i
-                    className="fa-solid fa-circle-minus fa-2xl"
-                    //   style="color: #f1c232"
-                  ></i>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className="flex justify-between py-5">
-              <div className="flex flex-col items-center justify-center">
-                <h3 className="font-bold">Transaction 2</h3>
-                <p>Amount $100</p>
-              </div>
-              <div className="flex flex-col items-center justify-center pr-5">
-                <h3 className="font-bold">Status</h3>
-                <div className="p-2">
-                  <i
-                    className="fa-solid fa-circle-minus fa-2xl"
-                    //   style="color: #f1c232"
-                  ></i>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className="flex justify-between py-5">
-              <div className="flex flex-col items-center justify-center">
-                <h3 className="font-bold">Transaction 2</h3>
-                <p>Amount $100</p>
-              </div>
-              <div className="flex flex-col items-center justify-center pr-5">
-                <h3 className="font-bold">Status</h3>
-                <div className="p-2">
-                  <i
-                    className="fa-solid fa-circle-minus fa-2xl"
-                    //   style="color: #f1c232"
-                  ></i>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className="flex justify-between py-5">
-              <div className="flex flex-col items-center justify-center">
-                <h3 className="font-bold">Transaction 2</h3>
-                <p>Amount $100</p>
-              </div>
-              <div className="flex flex-col items-center justify-center pr-5">
-                <h3 className="font-bold">Status</h3>
-                <div className="p-2">
-                  <i
-                    className="fa-solid fa-circle-minus fa-2xl"
-                    //   style="color: #f1c232"
-                  ></i>
-                </div>
-              </div>
-            </div>
-            <hr />
-            <div className="flex justify-between py-5">
-              <div className="flex flex-col items-center justify-center">
-                <h3 className="font-bold">Transaction 3</h3>
-                <p>Amount $100</p>
-              </div>
-              <div className="flex flex-col items-center justify-center pr-5">
-                <h3 className="font-bold">Status</h3>
-                <div className="p-2">
-                  <i
-                    className="fa-solid fa-circle-minus fa-2xl"
-                    //   style="color: #f1c232"
-                  ></i>
-                </div>
-              </div>
-            </div>
+          <h1 className="font-extrabold text-xl py-2">
+            Last five Transactions
+          </h1>
+          <p>List of last five transactions with basic transaction details</p>
 
-            <h1 id="change">Transaction List</h1>
-            <ul id="transactionsList"></ul>
-
-            {/* <script>// Your JavaScript code goes here</script> */}
-
-            <div className="transactionDetails">
-              <table id="detailsTable"></table>
+          {/* List of past transactions (all of them)  */}
+          <div className="">
+            <div className={`py-5 ${historyToDisplay ? "" : "hidden"}`}>
+              {sortedItems.length > 0 ? (
+                <div>
+                  <ul className="w-full rounded-2xl">
+                    {sortedItems.slice(0, 5).map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex flex-col justify-center p-5 w-full bg-white rounded-2xl shadow-lg mb-5"
+                      >
+                        <div className="flex items-center justify-between py-1">
+                          <p>Amount: </p>
+                          <p>{item.amount}</p>
+                        </div>
+                        <div className="flex items-center justify-between py-1">
+                          <p>Date:</p>
+                          <p>{item.date}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <div>Nothing to show here</div>
+              )}
             </div>
-
-            <hr />
           </div>
         </div>
       </div>
