@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import StudentDashboard from "./pages/StudentDashboard";
 import LoginForm from "./pages/LoginForm";
 import SignUpPage from "./pages/SignUpPage";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<LoginForm />} />
           <Route path="/registration" element={<SignUpPage />} />
           <Route path="/dashboard/*" element={<StudentDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
         </Routes>
       </div>
     </Router>

@@ -43,20 +43,20 @@ const Home = () => {
       collectionRef,
       (snapshot) => {
         if (snapshot.exists()) {
-// Initialize an object to store counts for each logged in user entry
+          // Initialize an object to store counts for each logged in user entry
           const counts = {};
           var index = 0;
 
-// Loop through each entry in the snapshot
+          // Loop through each entry in the snapshot
           Object.entries(snapshot.val()).forEach(([key, item]) => {
-// Initialize count for this entry if not already done
+            // Initialize count for this entry if not already done
 
             for (const innerkey in item) {
               if (item.hasOwnProperty(innerkey)) {
                 const value = item[innerkey];
-// Check if the payer's registration number matches with database
+                // Check if the payer's registration number matches with database
                 if (value.regNo === userRegNo) {
-// Increment the count for each entry
+                  // Increment the count for each entry
                   index++;
                 }
               }
@@ -67,7 +67,7 @@ const Home = () => {
             // console.log(key);
           });
 
-// Console log to see if the user exists    this will have to be changed to a pop up message or something that shows
+          // Console log to see if the user exists this will have to be changed to a pop up message or something that shows
           if (index > 0) {
             console.log("User found. Count:", index);
           } else {
@@ -77,12 +77,12 @@ const Home = () => {
           setverifiedItemsCount(index);
         } else {
           console.log("No data found for the collection");
-// Handle the case where no data is found
+          // Handle the case where no data is found
         }
       },
       (error) => {
         console.error("Error fetching collection data:", error);
-// Handle the error appropriately
+        // Handle the error appropriately
       }
     );
   };
@@ -95,19 +95,19 @@ const Home = () => {
       collectionRef,
       (snapshot) => {
         if (snapshot.exists()) {
-// Initialize an object to store counts for each logged in user entry
+          // Initialize an object to store counts for each logged in user entry
           const counts = {};
 
-// Loop through each entry in the snapshot
+          // Loop through each entry in the snapshot
           Object.entries(snapshot.val()).forEach(([key, item]) => {
-// Initialize count for this entry if not already done
+            // Initialize count for this entry if not already done
             for (const innerkey in item) {
               if (item.hasOwnProperty(innerkey)) {
                 const value = item[innerkey];
 
-// Check if the payer's registration number matches with database
+                // Check if the payer's registration number matches with database
                 if (value.regNo === userRegNo) {
-// Increment the count for each entry
+                  // Increment the count for each entry
                   var len = Object.keys(item).length;
                   setdeniedItemsCount(len);
                 }
@@ -120,12 +120,12 @@ const Home = () => {
           });
         } else {
           console.log("No data found for the collection");
-// Handle the case where no data is found
+          // Handle the case where no data is found
         }
       },
       (error) => {
         console.error("Error fetching collection data:", error);
-// Handle the error appropriately
+        // Handle the error appropriately
       }
     );
   };
@@ -138,7 +138,7 @@ const Home = () => {
     getdeniedItemsCount("deniedList", setdeniedItemsCount, regNo);
   }, [regNo]);
 
-// Get user information upon sign in such as firstname last name etc
+  // Get user information upon sign in such as firstname last name etc
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -166,7 +166,7 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
-// Fetching data for verified list
+  // Fetching data for verified list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "verifiedList");
@@ -206,7 +206,7 @@ const Home = () => {
     return () => unsubscribe();
   }, [regNo]);
 
-// Fetching data for denied list
+  // Fetching data for denied list
   useEffect(() => {
     const fetchAndListenForUpdates = () => {
       const dbRef = ref(database, "deniedList");
@@ -246,7 +246,7 @@ const Home = () => {
     return () => unsubscribe();
   }, [regNo]);
 
-// Combine and sort both verified and denied items
+  // Combine and sort both verified and denied items
   const allItems = [...verifiedItems, ...deniedItems];
   const sortedItems = allItems.sort(sortByDateDesc);
 
@@ -298,7 +298,7 @@ const Home = () => {
           </h1>
           <p>List of last five transactions with basic transaction details</p>
 
-{/* List of past transactions (all of them)  */}
+          {/* List of past transactions (all of them)  */}
           <div className="">
             <div className={`py-5 ${historyToDisplay ? "" : "hidden"}`}>
               {sortedItems.length > 0 ? (

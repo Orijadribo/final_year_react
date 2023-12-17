@@ -1,4 +1,3 @@
-// StudentDashboard.js
 import React, { useState } from "react";
 import { Outlet, Route, Routes } from "react-router-dom";
 import StudentSideBar from "../components/StudentSideBar";

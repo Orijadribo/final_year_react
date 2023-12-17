@@ -41,11 +41,12 @@ const LoginForm = () => {
 
     // Validate email format
     const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
+    const adminEmailRegex = /^[a-zA-Z0-9._-]+@kiu.ac.ug$/;
 
-    if (!emailRegex.test(email)) {
-      setError("Invalid email format");
-      return;
-    }
+    // if (!emailRegex.test(email) || !adminEmailRegex.test(email)) {
+    //   setError("Invalid email format");
+    //   return;
+    // }
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -64,8 +65,12 @@ const LoginForm = () => {
           // Remove the progress bar
           hideProgressBar: true,
           onClose: () => {
-            // Redirect to Home.js after the toast message is closed
-            navigate("/dashboard");
+            // Redirect to student dashboard after the toast message is closed
+            if (emailRegex.test(email)) {
+              navigate("/dashboard");
+            } else {
+              navigate("/admin");
+            }
           },
         });
       })
