@@ -5,6 +5,7 @@ import Upload from "../Upload";
 import Feedback from "./Feedback";
 import HomeAdmin from "./HomeAdmin";
 import SettingsAdmin from "./SettingsAdmin";
+import HistoryAdmin from "./HistoryAdmin";
 
 const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
   const [sideBar, setSideBar] = useState(false);
@@ -24,7 +25,7 @@ const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
         <OptionsBarAdmin sideBar={sideBar} openSideBar={openSideBar} />
         {selectedSection === "home" && <HomeAdmin />}
         {selectedSection === "upload" && <Upload />}
-        {/* {selectedSection === "history" && <History />} */}
+        {selectedSection === "history" && <HistoryAdmin />}
         {selectedSection === "feedback" && <Feedback />}
         {selectedSection === "settings" && <SettingsAdmin />}
       </div>
