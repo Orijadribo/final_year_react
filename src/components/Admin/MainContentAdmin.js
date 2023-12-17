@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import AdminSideBar from "./AdminSideBar";
 import OptionsBarAdmin from "./OptionsBarAdmin";
 import Upload from "../Upload";
+import Feedback from "./Feedback";
+import HomeAdmin from "./HomeAdmin";
+import SettingsAdmin from "./SettingsAdmin";
 
 const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
   const [sideBar, setSideBar] = useState(false);
@@ -19,11 +22,11 @@ const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
           setSelectedSection={setSelectedSection}
         />
         <OptionsBarAdmin sideBar={sideBar} openSideBar={openSideBar} />
-        {/* {selectedSection === "home" && <Home />} */}
+        {selectedSection === "home" && <HomeAdmin />}
         {selectedSection === "upload" && <Upload />}
         {/* {selectedSection === "history" && <History />} */}
-        {/* {selectedSection === "notifications" && <Notifications />} */}
-        {/* {selectedSection === "settings" && <Settings />} */}
+        {selectedSection === "feedback" && <Feedback />}
+        {selectedSection === "settings" && <SettingsAdmin />}
       </div>
     </div>
   );

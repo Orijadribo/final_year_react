@@ -27,7 +27,7 @@ const AdminDashboard = () => {
           <Route index path="home" />
           <Route path="upload" />
           <Route path="history" />
-          <Route path="notifications" />
+          <Route path="feedback" />
           <Route path="settings" />
         </Route>
         <Route path="login" element={<LoginForm />} />

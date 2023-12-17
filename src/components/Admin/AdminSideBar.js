@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PiStudent } from "react-icons/pi";
+import { RiAdminFill } from "react-icons/ri";
 import { FaHome } from "react-icons/fa";
 import { FaUpload } from "react-icons/fa6";
 import { FaHistory } from "react-icons/fa";
@@ -20,7 +20,7 @@ const AdminSideBar = ({ sideBar, setSelectedSection }) => {
   const openHome = () => handleSectionChange("home");
   const openUpload = () => handleSectionChange("upload");
   const openHistory = () => handleSectionChange("history");
-  const openNotifications = () => handleSectionChange("notifications");
+  const openFeedback = () => handleSectionChange("feedback");
   const openSettings = () => handleSectionChange("settings");
 
   return (
@@ -33,7 +33,7 @@ const AdminSideBar = ({ sideBar, setSelectedSection }) => {
       >
         <div className="flex gap-2 p-8 md:p-8 items-center justify-center">
           <div className="p-1 flex items-center">
-            <PiStudent className="w-10 h-10 text-[#02b056]" />
+            <RiAdminFill className="w-10 h-10 text-[#02b056]" />
           </div>
           <h1 className="font-bold text-[24px] font-body">Admin Dashboard</h1>
         </div>
@@ -81,9 +81,9 @@ const AdminSideBar = ({ sideBar, setSelectedSection }) => {
                 </div>
               </li>
             </Link>
-            <Link to="notifications">
+            <Link to="feedback">
               <li
-                onClick={openNotifications}
+                onClick={openFeedback}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
               >
                 <div className="flex gap-5">
