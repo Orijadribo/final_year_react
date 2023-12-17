@@ -46,7 +46,6 @@ const Upload = () => {
     const timestampInSeconds = Date.now() / 1000; // Convert milliseconds to seconds
     const timestamp = new Date(timestampInSeconds * 1000); // Convert back to milliseconds for Date object
 
-
     const databaseData = await fetchDatabaseData();
 
     if (databaseData) {
@@ -224,9 +223,10 @@ const Upload = () => {
             name="regNo"
             id="regNo"
             className="border p-2 px-2 mb-5 rounded-md"
-            value={regNo}
+            value={regNo ? `${regNo}` : undefined}
             required
-            readOnly
+            // readOnly={!!(regNo)}
+            onChange={() => {}}
           />
 
           <label htmlFor="payer" className="pb-2">
@@ -237,9 +237,10 @@ const Upload = () => {
             name="payer"
             id="payer"
             className="border p-2 px-2 mb-5 rounded-md"
-            value={lastName + " " + firstName}
+            value={lastName || firstName ? `${lastName} ${firstName}` : undefined}
             required
-            readOnly
+            // readOnly={!!(lastName || firstName)}
+            onChange={() => {}}
           />
 
           <div className="flex items-center justify-center">
