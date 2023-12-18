@@ -43,10 +43,10 @@ const LoginForm = () => {
     const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
     const adminEmailRegex = /^[a-zA-Z0-9._-]+@kiu.ac.ug$/;
 
-    // if (!emailRegex.test(email) || !adminEmailRegex.test(email)) {
-    //   setError("Invalid email format");
-    //   return;
-    // }
+    if (!emailRegex.test(email) && !adminEmailRegex.test(email)) {
+      setError("Invalid email format");
+      return;
+    }
 
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {

@@ -15,7 +15,7 @@ const HomeAdmin = () => {
   };
 
 const options = {
-  // maintainAspectRatio: false, // Disable aspect ratio to allow chart resizing
+  maintainAspectRatio: false, // Disable aspect ratio to allow chart resizing
   responsive: true,
   plugins: {
     legend: {
