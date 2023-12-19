@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { RiAdminFill } from "react-icons/ri";
 import { FaHome } from "react-icons/fa";
-import { FaUpload } from "react-icons/fa6";
 import { FaHistory } from "react-icons/fa";
-import { IoNotifications } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
 import { VscFeedback } from "react-icons/vsc";
 import { Link, Navigate, useNavigate } from "react-router-dom";

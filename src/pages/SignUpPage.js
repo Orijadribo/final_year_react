@@ -8,7 +8,7 @@ import {
   doc,
   setDoc,
 } from "../api/FirebaseFirestone";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -150,8 +150,7 @@ const SignUpPage = () => {
             <label className="pl-2 text-sm" htmlFor="terms">
               I have read and agree to <span> </span>
               <span className="text-[#02B056]">
-                <a href="" className=" underline">
-                  {" "}
+                <a href="/terms&conditions" className=" underline">
                   Terms and Conditions
                 </a>
               </span>
