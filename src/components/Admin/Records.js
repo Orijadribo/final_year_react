@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import { database } from "../../api/Firebase";
 import { IoIosCheckmarkCircle } from "react-icons/io";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 
 const Records = () => {
   const [keysToDisplay, setKeysToDisplay] = useState([]);

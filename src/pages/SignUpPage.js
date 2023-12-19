@@ -18,19 +18,34 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [regNo, setRegNo] = useState("");
-  const [error, setError] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [errorRegNo, setErrorRegNo] = useState("");
 
   const navigate = useNavigate();
+
+  // Function to clear the form
+  const handleClearForm = () => {
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPassword("");
+    setRegNo("");
+    setErrorEmail("");
+    setErrorRegNo("");
+  };
 
   const handleSignup = async () => {
     try {
       const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
+      const regNoRegex = /^\d{4}-\d{2}-\d{5}$/;
 
       if (!emailRegex.test(email)) {
-        setError("Invalid student email format");
+        setErrorEmail("Invalid student email format");
         return;
-      }else{
-
+      } else if (!regNoRegex.test(regNo)) {
+        setErrorRegNo("Invalid student registration number");
+        return;
+      } else {
         // Create user with email and password
         const userCredential = await createUserWithEmailAndPassword(
           auth,
@@ -38,7 +53,7 @@ const SignUpPage = () => {
           password
         );
         const user = userCredential.user;
-  
+
         // Store additional user information in Firestore
         const userRef = doc(firestore, "users", user.uid);
         await setDoc(userRef, {
@@ -47,7 +62,7 @@ const SignUpPage = () => {
           email: email,
           regNo: regNo,
         });
-  
+
         // Drop a notification and navigate to login page upon signup
         toast.success("User created Successfully!", {
           position: toast.POSITION.TOP_CENTER,
@@ -66,10 +81,9 @@ const SignUpPage = () => {
             navigate("/");
           },
         });
-  
+
         console.log("User signed up");
       }
-
     } catch (error) {
       console.error("Sign up error:", error.message);
     }
@@ -88,13 +102,13 @@ const SignUpPage = () => {
         </div>
 
         {/* SignUp form */}
-        <form className="flex flex-col w-full" action="">
+        <form className="flex flex-col w-full" action="" id="registerForm">
           <label className="pb-2" htmlFor="email">
             Student Email
           </label>
           <input
             className={`border rounded-lg p-2 mb-5 ${
-              error ? "border-red-500" : ""
+              errorEmail ? "border-red-500" : ""
             }`}
             id="email"
             name="email"
@@ -107,7 +121,9 @@ const SignUpPage = () => {
 
           {/* Email input error message */}
           <div id="emailError" className="error-message">
-            {error && <p className="text-red-500 mt-[-20px]">{error}</p>}
+            {errorEmail && (
+              <p className="text-red-500 mt-[-20px]">{errorEmail}</p>
+            )}
           </div>
 
           <label className="pb-2" htmlFor="password">
@@ -144,12 +160,20 @@ const SignUpPage = () => {
             Registration Number
           </label>
           <input
-            className="border rounded-lg p-2 mb-5"
+            className={`border rounded-lg p-2 mb-5 ${
+              errorRegNo ? "border-red-500" : ""
+            }`}
             id="reg_no"
             type="text"
             value={regNo}
             onChange={(e) => setRegNo(e.target.value)}
           />
+          {/* RegNo input error message */}
+          <div id="regNoError" className="error-message">
+            {errorRegNo && (
+              <p className="text-red-500 mt-[-20px]">{errorRegNo}</p>
+            )}
+          </div>
         </form>
 
         {/* Terms and conditions */}
@@ -172,15 +196,28 @@ const SignUpPage = () => {
           </div>
         </div>
 
-        {/* Login button with custom background color */}
-        <button
-          className="w-full rounded-lg py-2 bg-[#02B056]"
-          type="button"
-          id="loginButton"
-          onClick={handleSignup}
-        >
-          Register Now
-        </button>
+        <div className="flex w-full gap-5">
+          {/* Login button with custom background color */}
+          <button
+            className="w-full rounded-lg py-2 bg-white border"
+            type="button"
+            id="clearButton"
+            onClick={handleClearForm}
+          >
+            Clear Form
+          </button>
+
+          {/* Form Clear button with custom background color */}
+          <button
+            className="w-full rounded-lg py-2 bg-[#02B056]"
+            type="button"
+            id="loginButton"
+            onClick={handleSignup}
+          >
+            Register Now
+          </button>
+        </div>
+
         <div className="text-sm mt-5">
           Already have an account?<span> </span>
           <span className="text-[#02B056] underline">
