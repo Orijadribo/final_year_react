@@ -5,7 +5,6 @@ import StudentDashboard from "./pages/StudentDashboard";
 import LoginForm from "./pages/LoginForm";
 import SignUpPage from "./pages/SignUpPage";
 import AdminDashboard from "./pages/AdminDashboard";
-import Details from "./components/Admin/Details";
 import Terms from "./components/Terms";
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
           <Route path="/dashboard/*" element={<StudentDashboard />} />
           <Route path="/admin/*" element={<AdminDashboard />} />
           <Route path="/terms&conditions" element={<Terms />} />
-          <Route path="/admin/records/:key" element={<Details />} />
         </Routes>
       </div>
     </Router>

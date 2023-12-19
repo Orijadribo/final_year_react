@@ -7,7 +7,6 @@ import HomeAdmin from "./HomeAdmin";
 import SettingsAdmin from "./SettingsAdmin";
 import HistoryAdmin from "./HistoryAdmin";
 import Records from "./Records";
-import Details from "./Details"; // Import Details component
 
 const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
   const [sideBar, setSideBar] = useState(false);
