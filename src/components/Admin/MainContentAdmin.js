@@ -33,8 +33,6 @@ const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
         {selectedSection === "history" && <HistoryAdmin />}
         {selectedSection === "feedback" && <Feedback />}
         {selectedSection === "settings" && <SettingsAdmin />}
-        {/* Render the Details component when selectedSection is "details" */}
-        {selectedSection === "details" && key && <Details key={key} />}
       </div>
     </div>
   );

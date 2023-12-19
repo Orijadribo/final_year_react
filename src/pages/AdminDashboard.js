@@ -15,7 +15,7 @@ const Layout = () => {
         selectedSection={selectedSection}
         setSelectedSection={setSelectedSection}
       />
-      <Outlet /> {/* This is where child routes will be rendered */}
+      <Outlet /> 
     </div>
   );
 };
@@ -30,7 +30,6 @@ const AdminDashboard = () => {
           <Route path="history" />
           <Route path="feedback" />
           <Route path="settings" />
-          <Route path="details/:key" element={<Details />} />
         </Route>
         <Route path="login" element={<LoginForm />} />
       </Routes>
