@@ -12,28 +12,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // const handleLogin = () => {
-  //   // Validate email format
-  //   const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
-
-  //   if (!emailRegex.test(email)) {
-  //     setError("Invalid email format");
-  //     return;
-  //   }
-
-  //   // Perform login logic based on email and password
-  //   if (email === "david.ocan@studmc.kiu.ac.ug" && password === "12345678") {
-  //     // Redirect to Home.js
-  //     navigate("/dashboard");
-  //   } else if (email === "daniel@studmc.kiu.ac.ug" && password === "123456") {
-  //     // Redirect to MainContent.js
-  //     navigate("/MainContent");
-  //   } else {
-  //     // Display an error for incorrect credentials
-  //     setError("Invalid email or password");
-  //   }
-  // };
-
   // Perform login logic based on email and password
   const handleLogin = (e) => {
     // Prevent the default form submission behavior

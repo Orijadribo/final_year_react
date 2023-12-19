@@ -18,48 +18,58 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [regNo, setRegNo] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignup = async () => {
     try {
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+      const emailRegex = /^[a-zA-Z0-9._-]+@studmc.kiu.ac.ug$/;
 
-      // Store additional user information in Firestore
-      const userRef = doc(firestore, "users", user.uid);
-      await setDoc(userRef, {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        regNo: regNo,
-      });
+      if (!emailRegex.test(email)) {
+        setError("Invalid student email format");
+        return;
+      }else{
 
-      // Drop a notification and navigate to login page upon signup 
-      toast.success("User created Successfully!", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 500,
-        // Styling the pop-up message
-        style: {
-          backgroundColor: "#02B056",
-          color: "#fff",
-          textAlign: "center",
-        },
-        icon: false,
-        // Remove the progress bar
-        hideProgressBar: true,
-        onClose: () => {
-          // Redirect to Home.js after the toast message is closed
-          navigate("/");
-        },
-      });
+        // Create user with email and password
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+  
+        // Store additional user information in Firestore
+        const userRef = doc(firestore, "users", user.uid);
+        await setDoc(userRef, {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          regNo: regNo,
+        });
+  
+        // Drop a notification and navigate to login page upon signup
+        toast.success("User created Successfully!", {
+          position: toast.POSITION.TOP_CENTER,
+          autoClose: 500,
+          // Styling the pop-up message
+          style: {
+            backgroundColor: "#02B056",
+            color: "#fff",
+            textAlign: "center",
+          },
+          icon: false,
+          // Remove the progress bar
+          hideProgressBar: true,
+          onClose: () => {
+            // Redirect to Home.js after the toast message is closed
+            navigate("/");
+          },
+        });
+  
+        console.log("User signed up");
+      }
 
-      console.log("User signed up");
     } catch (error) {
       console.error("Sign up error:", error.message);
     }
@@ -83,7 +93,9 @@ const SignUpPage = () => {
             Student Email
           </label>
           <input
-            className="border rounded-lg p-2 mb-5"
+            className={`border rounded-lg p-2 mb-5 ${
+              error ? "border-red-500" : ""
+            }`}
             id="email"
             name="email"
             type="email"
@@ -94,7 +106,9 @@ const SignUpPage = () => {
           />
 
           {/* Email input error message */}
-          <div id="emailError" className="error-message"></div>
+          <div id="emailError" className="error-message">
+            {error && <p className="text-red-500 mt-[-20px]">{error}</p>}
+          </div>
 
           <label className="pb-2" htmlFor="password">
             Password
