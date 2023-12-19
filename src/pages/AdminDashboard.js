@@ -3,6 +3,7 @@ import { Outlet, Route, Routes } from "react-router-dom";
 import AdminSideBar from "../components/Admin/AdminSideBar";
 import MainContentAdmin from "../components/Admin/MainContentAdmin";
 import LoginForm from "./LoginForm";
+import Details from "../components/Admin/Details";
 
 const Layout = () => {
   const [selectedSection, setSelectedSection] = useState("home");
@@ -25,10 +26,11 @@ const AdminDashboard = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index path="home" />
-          <Route path="upload" />
+          <Route path="records" />
           <Route path="history" />
           <Route path="feedback" />
           <Route path="settings" />
+          <Route path="details/:key" element={<Details />} />
         </Route>
         <Route path="login" element={<LoginForm />} />
       </Routes>

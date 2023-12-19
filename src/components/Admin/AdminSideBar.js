@@ -18,7 +18,7 @@ const AdminSideBar = ({ sideBar, setSelectedSection }) => {
   };
 
   const openHome = () => handleSectionChange("home");
-  const openUpload = () => handleSectionChange("upload");
+  const openRecords = () => handleSectionChange("records");
   const openHistory = () => handleSectionChange("history");
   const openFeedback = () => handleSectionChange("feedback");
   const openSettings = () => handleSectionChange("settings");
@@ -55,16 +55,16 @@ const AdminSideBar = ({ sideBar, setSelectedSection }) => {
                 </div>
               </li>
             </Link>
-            <Link to="upload">
+            <Link to="records">
               <li
-                onClick={openUpload}
+                onClick={openRecords}
                 className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
               >
                 <div className="flex gap-5">
                   <div className="flex items-center justify-center">
-                    <FaUpload />
+                    <FaHistory />
                   </div>
-                  Upload
+                  Records
                 </div>
               </li>
             </Link>

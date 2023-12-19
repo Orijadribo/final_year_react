@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom"; // Import useParams from react-router-dom
 import AdminSideBar from "./AdminSideBar";
 import OptionsBarAdmin from "./OptionsBarAdmin";
-import Upload from "../Upload";
 import Feedback from "./Feedback";
 import HomeAdmin from "./HomeAdmin";
 import SettingsAdmin from "./SettingsAdmin";
 import HistoryAdmin from "./HistoryAdmin";
+import Records from "./Records";
+import Details from "./Details"; // Import Details component
 
 const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
   const [sideBar, setSideBar] = useState(false);
@@ -13,6 +15,9 @@ const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
   const openSideBar = () => {
     setSideBar(!sideBar);
   };
+
+  // Use useParams to get the key from the URL
+  const { key } = useParams();
 
   return (
     <div>
@@ -24,10 +29,12 @@ const MainContentAdmin = ({ selectedSection, setSelectedSection }) => {
         />
         <OptionsBarAdmin sideBar={sideBar} openSideBar={openSideBar} />
         {selectedSection === "home" && <HomeAdmin />}
-        {selectedSection === "upload" && <Upload />}
+        {selectedSection === "records" && <Records />}
         {selectedSection === "history" && <HistoryAdmin />}
         {selectedSection === "feedback" && <Feedback />}
         {selectedSection === "settings" && <SettingsAdmin />}
+        {/* Render the Details component when selectedSection is "details" */}
+        {selectedSection === "details" && key && <Details key={key} />}
       </div>
     </div>
   );

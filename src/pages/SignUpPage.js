@@ -150,7 +150,7 @@ const SignUpPage = () => {
             <label className="pl-2 text-sm" htmlFor="terms">
               I have read and agree to <span> </span>
               <span className="text-[#02B056]">
-                <a href="/login" className=" underline">
+                <a href="" className=" underline">
                   {" "}
                   Terms and Conditions
                 </a>
