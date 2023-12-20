@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { profile_pic } from "../assets";
 import { Link, useNavigate } from "react-router-dom";
-import { VscFeedback } from "react-icons/vsc";
+import { MdFeedback } from "react-icons/md";
 import "firebase/auth";
 import { auth } from "../api/Firebase";
 import { signOut } from "firebase/auth";
@@ -136,9 +136,8 @@ const OptionsBar = ({ openSideBar, sideBar }) => {
           <div className="flex flex-row items-center justify-center gap-4">
             <div className="px-5 hidden md:block">
               <div className="flex flex-row items-center relative justify-center px-1 gap-5">
-                <div className="cursor-pointer">
-                  <VscFeedback />
-                </div>
+                
+
                 <div className="cursor-pointer">
                   <FaBell />
                 </div>
