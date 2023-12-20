@@ -27,6 +27,7 @@ const StudentDashboard = () => {
           <Route index path="home" />
           <Route path="upload" />
           <Route path="history" />
+          <Route path="feedback" />
           <Route path="notifications" />
           <Route path="settings" />
         </Route>

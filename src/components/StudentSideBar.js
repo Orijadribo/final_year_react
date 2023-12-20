@@ -5,6 +5,7 @@ import { FaUpload } from "react-icons/fa6";
 import { FaHistory } from "react-icons/fa";
 import { IoNotifications } from "react-icons/io5";
 import { IoMdSettings } from "react-icons/io";
+import { MdFeedback } from "react-icons/md";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const StudentSideBar = ({ sideBar, setSelectedSection }) => {
@@ -19,6 +20,7 @@ const StudentSideBar = ({ sideBar, setSelectedSection }) => {
   const openHome = () => handleSectionChange("home");
   const openUpload = () => handleSectionChange("upload");
   const openHistory = () => handleSectionChange("history");
+  const openFeedback = () => handleSectionChange("feedback");
   const openNotifications = () => handleSectionChange("notifications");
   const openSettings = () => handleSectionChange("settings");
 
@@ -77,6 +79,19 @@ const StudentSideBar = ({ sideBar, setSelectedSection }) => {
                     <FaHistory />
                   </div>
                   History
+                </div>
+              </li>
+            </Link>
+            <Link to="feedback">
+              <li
+                onClick={openFeedback}
+                className="py-2 px-5 cursor-pointer hover:bg-slate-200 rounded-l-xl"
+              >
+                <div className="flex gap-5">
+                  <div className="flex items-center justify-center">
+                    <MdFeedback />
+                  </div>
+                  Feedback
                 </div>
               </li>
             </Link>

@@ -6,6 +6,7 @@ import History from "./History";
 import Notifications from "./Notifications";
 import Settings from "./Settings";
 import OptionsBar from "./OptionsBar";
+import StudentFeedbackForm from "./StudentFeedbackForm";
 
 const MainContent = ({ selectedSection, setSelectedSection }) => {
   const [sideBar, setSideBar] = useState(false);
@@ -26,6 +27,7 @@ const MainContent = ({ selectedSection, setSelectedSection }) => {
         {selectedSection === "home" && <Home />}
         {selectedSection === "upload" && <Upload />}
         {selectedSection === "history" && <History />}
+        {selectedSection === "feedback" && <StudentFeedbackForm/>}
         {selectedSection === "notifications" && <Notifications />}
         {selectedSection === "settings" && <Settings />}
       </div>
